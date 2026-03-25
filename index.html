@@ -169,6 +169,19 @@ tr.recon-discrepancy td{background:rgba(245,158,11,.05)}
 ::-webkit-scrollbar-track{background:var(--surface)}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 ::-webkit-scrollbar-thumb:hover{background:var(--text-dim)}
+
+/* Data source indicator */
+.data-source{display:inline-flex;align-items:center;gap:6px;font-size:11px;padding:3px 12px;border-radius:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.data-live{background:rgba(16,185,129,.2);color:var(--green)}
+.data-stale{background:rgba(245,158,11,.2);color:var(--amber)}
+.data-offline{background:rgba(239,68,68,.2);color:var(--red)}
+.data-nodata{background:rgba(100,116,139,.2);color:var(--text-dim)}
+
+/* Empty state */
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 16px;color:var(--text-dim);text-align:center;min-height:80px}
+.empty-state-icon{font-size:28px;margin-bottom:8px;opacity:.5}
+.empty-state-text{font-size:12px}
+.empty-state-sub{font-size:11px;margin-top:4px;opacity:.6}
 </style>
 </head>
 <body>
@@ -176,7 +189,8 @@ tr.recon-discrepancy td{background:rgba(245,158,11,.05)}
 <div class="header">
   <h1>IBKR <span>PAPER</span> TRADING BOT</h1>
   <div class="header-right">
-    <span id="reconBadge" class="recon-badge recon-ok">0 discrepancies</span>
+    <span id="dataSource" class="data-source data-nodata">NO DATA</span>
+    <span id="reconBadge" class="recon-badge recon-ok">--</span>
     <div class="toggle-wrap">
       <span class="toggle-label">APPROVAL MODE</span>
       <label class="toggle"><input type="checkbox" id="approvalToggle"><span class="toggle-slider"></span></label>
@@ -293,38 +307,21 @@ tr.recon-discrepancy td{background:rgba(245,158,11,.05)}
 
 <script>
 // ── Economic calendar (mirrors event_vol_selling.py) ──
-const EVENTS = [
-  ["2026-01-28","FOMC"],["2026-03-18","FOMC"],["2026-05-06","FOMC"],["2026-06-17","FOMC"],
-  ["2026-07-29","FOMC"],["2026-09-16","FOMC"],["2026-11-04","FOMC"],["2026-12-16","FOMC"],
-  ["2026-01-14","CPI"],["2026-02-11","CPI"],["2026-03-11","CPI"],["2026-04-14","CPI"],
-  ["2026-05-12","CPI"],["2026-06-10","CPI"],["2026-07-14","CPI"],["2026-08-12","CPI"],
-  ["2026-09-15","CPI"],["2026-10-13","CPI"],["2026-11-10","CPI"],["2026-12-10","CPI"],
-  ["2026-01-09","NFP"],["2026-02-06","NFP"],["2026-03-06","NFP"],["2026-04-03","NFP"],
-  ["2026-05-08","NFP"],["2026-06-05","NFP"],["2026-07-02","NFP"],["2026-08-07","NFP"],
-  ["2026-09-04","NFP"],["2026-10-02","NFP"],["2026-11-06","NFP"],["2026-12-04","NFP"],
-];
-
-const STRAT_DISPLAY = {
-  spx_0dte: {label:"SPX 0DTE Credit Spreads", desc:"Put credit spreads ~50pts below SPX", color:"var(--accent)"},
-  vix_mean_reversion: {label:"VIX Mean Reversion", desc:"Sell VIX call spreads on spikes (>25 + RSI>70)", color:"var(--purple)"},
-  event_vol_selling: {label:"Event Vol Selling", desc:"Iron condors day before FOMC/CPI/NFP", color:"var(--amber)"},
-  gamma_scalping: {label:"Gamma Scalping", desc:"ATM SPY straddles + delta hedging", color:"var(--cyan)"},
-};
-
-// Default guardrail params per strategy (to detect adjustments)
-const DEFAULT_PARAMS = {
-  spx_0dte: {vix_threshold:25, spread_width:5, spx_offset:50},
-  vix_mean_reversion: {vix_spike_threshold:25, rsi_overbought:70},
-  event_vol_selling: {ic_put_offset:75, ic_call_offset:75, ic_wing_width:25},
-  gamma_scalping: {delta_hedge_threshold:10, straddle_dte:30},
-};
+const EVENTS=[["2026-01-28","FOMC"],["2026-03-18","FOMC"],["2026-05-06","FOMC"],["2026-06-17","FOMC"],["2026-07-29","FOMC"],["2026-09-16","FOMC"],["2026-11-04","FOMC"],["2026-12-16","FOMC"],["2026-01-14","CPI"],["2026-02-11","CPI"],["2026-03-11","CPI"],["2026-04-14","CPI"],["2026-05-12","CPI"],["2026-06-10","CPI"],["2026-07-14","CPI"],["2026-08-12","CPI"],["2026-09-15","CPI"],["2026-10-13","CPI"],["2026-11-10","CPI"],["2026-12-10","CPI"],["2026-01-09","NFP"],["2026-02-06","NFP"],["2026-03-06","NFP"],["2026-04-03","NFP"],["2026-05-08","NFP"],["2026-06-05","NFP"],["2026-07-02","NFP"],["2026-08-07","NFP"],["2026-09-04","NFP"],["2026-10-02","NFP"],["2026-11-06","NFP"],["2026-12-04","NFP"]];
+const STRAT_DISPLAY={spx_0dte:{label:"SPX 0DTE Credit Spreads",desc:"Put credit spreads ~50pts below SPX",color:"var(--accent)"},vix_mean_reversion:{label:"VIX Mean Reversion",desc:"Sell VIX call spreads on spikes (>25 + RSI>70)",color:"var(--purple)"},event_vol_selling:{label:"Event Vol Selling",desc:"Iron condors day before FOMC/CPI/NFP",color:"var(--amber)"},gamma_scalping:{label:"Gamma Scalping",desc:"ATM SPY straddles + delta hedging",color:"var(--cyan)"}};
+const DEFAULT_PARAMS={spx_0dte:{vix_threshold:25,spread_width:5,spx_offset:50},vix_mean_reversion:{vix_spike_threshold:25,rsi_overbought:70},event_vol_selling:{ic_put_offset:75,ic_call_offset:75,ic_wing_width:25},gamma_scalping:{delta_hedge_threshold:10,straddle_dte:30}};
 
 let DATA = null;
 let HEALTH_DATA = null;
 let activeFilter = "all";
 let lastFetchTime = null;
 let lastHttpStatus = null;
+let dataLoadFailed = false;
 const DATA_URL = "bot_log.json";
+
+function emptyHTML(icon, text, sub) {
+  return `<div class="empty-state"><div class="empty-state-icon">${icon}</div><div class="empty-state-text">${text}</div>${sub ? `<div class="empty-state-sub">${sub}</div>` : ""}</div>`;
+}
 
 // ── Data loading ──
 async function loadData() {
@@ -333,19 +330,23 @@ async function loadData() {
     const resp = await fetch(url);
     lastHttpStatus = resp.status;
     lastFetchTime = new Date();
-    if (!resp.ok) return;
-    DATA = await resp.json();
+    if (!resp.ok) { dataLoadFailed = true; renderDataSource(); updateDebugPanel(); return; }
+    const parsed = await resp.json();
+    if (!parsed || !parsed.updated_at) { dataLoadFailed = true; renderDataSource(); updateDebugPanel(); return; }
+    DATA = parsed;
+    dataLoadFailed = false;
     render();
   } catch(e) {
     lastHttpStatus = "ERR";
     lastFetchTime = new Date();
+    dataLoadFailed = true;
     console.error("Failed to load bot_log.json:", e);
+    renderDataSource();
   }
   updateDebugPanel();
 }
 
 async function loadHealth() {
-  // Try loading health endpoint (only works when bot is running locally or via proxy)
   try {
     const resp = await fetch("health.json?t=" + Date.now());
     if (resp.ok) { HEALTH_DATA = await resp.json(); }
@@ -355,7 +356,8 @@ async function loadHealth() {
 
 // ── Render everything ──
 function render() {
-  if (!DATA) return;
+  if (!DATA) { renderEmptyDashboard(); return; }
+  renderDataSource();
   renderFreshness();
   renderReconBadge();
   renderKPIs();
@@ -365,10 +367,55 @@ function render() {
   renderEvents();
   renderAlerts();
   renderApprovalPanel();
-  document.getElementById("approvalToggle").checked = DATA.approval_mode;
+  document.getElementById("approvalToggle").checked = DATA.approval_mode || false;
 }
 
-// ── 1. Data Freshness Indicator ──
+function renderEmptyDashboard() {
+  renderDataSource();
+  document.getElementById("stratGrid").innerHTML = emptyHTML("\u23F3", "Waiting for bot data...", "Start the trading bot to see strategy cards here");
+  document.getElementById("pnlChart").innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="#64748b" font-size="13">Waiting for bot data...</text>';
+  document.getElementById("tradeBody").innerHTML = `<tr><td colspan="8">${emptyHTML("\u{1F4CB}", "No trades yet", "Trades will appear here when the bot executes signals")}</td></tr>`;
+  document.getElementById("tradeFilters").innerHTML = "";
+  document.getElementById("alertLog").innerHTML = emptyHTML("\u{1F514}", "No alerts", "Alerts will appear when the bot starts running");
+}
+
+// ── 3. DATA SOURCE indicator ──
+function renderDataSource() {
+  const el = document.getElementById("dataSource");
+  const dot = document.getElementById("freshnessDot");
+  const freshText = document.getElementById("freshnessText");
+
+  if (!DATA || dataLoadFailed) {
+    if (lastHttpStatus === 404 || lastHttpStatus === "ERR" || !lastFetchTime) {
+      el.textContent = "NO DATA";
+      el.className = "data-source data-nodata";
+      dot.className = "status-dot dot-red";
+      freshText.textContent = "No bot_log.json found";
+    } else {
+      el.textContent = "OFFLINE";
+      el.className = "data-source data-offline";
+      dot.className = "status-dot dot-red";
+      freshText.textContent = "Failed to load data";
+    }
+    return;
+  }
+
+  const updatedAt = new Date(DATA.updated_at);
+  const diffMin = Math.floor((new Date() - updatedAt) / 60000);
+
+  if (diffMin < 5) {
+    el.textContent = "LIVE";
+    el.className = "data-source data-live";
+  } else if (diffMin <= 60) {
+    el.textContent = "STALE";
+    el.className = "data-source data-stale";
+  } else {
+    el.textContent = "OFFLINE";
+    el.className = "data-source data-offline";
+  }
+}
+
+// ── Freshness display ──
 function renderFreshness() {
   if (!DATA || !DATA.updated_at) return;
   updateFreshnessDisplay();
@@ -381,11 +428,7 @@ function updateFreshnessDisplay() {
   const diffMs = now - updatedAt;
   const diffMin = Math.floor(diffMs / 60000);
   const diffSec = Math.floor(diffMs / 1000);
-
-  // Format the time
   const timeStr = updatedAt.toLocaleTimeString("en-US", {hour:"numeric", minute:"2-digit"});
-
-  // Format the age
   let ageStr;
   if (diffMin < 1) ageStr = `${diffSec}s ago`;
   else if (diffMin < 60) ageStr = `${diffMin} min ago`;
@@ -393,365 +436,190 @@ function updateFreshnessDisplay() {
   else ageStr = `${Math.floor(diffMin/1440)}d ago`;
 
   document.getElementById("freshnessText").textContent = `Last data: ${timeStr} (${ageStr})`;
-
-  // Color the dot
   const dot = document.getElementById("freshnessDot");
   dot.className = "status-dot";
   if (diffMin < 5) dot.classList.add("dot-green");
   else if (diffMin <= 60) dot.classList.add("dot-yellow");
   else dot.classList.add("dot-red");
+
+  renderDataSource();
 }
 
-// ── 5. Reconciliation Badge ──
+// ── Recon badge ──
 function renderReconBadge() {
   const badge = document.getElementById("reconBadge");
+  if (!DATA || !DATA.reconciliation) { badge.textContent = "--"; badge.className = "recon-badge recon-ok"; return; }
   const recon = DATA.reconciliation;
-  if (!recon) {
-    badge.textContent = "No recon data";
-    badge.className = "recon-badge recon-ok";
-    return;
-  }
-
-  const discrepancies = recon.total_discrepancies || 0;
+  const disc = recon.total_discrepancies || 0;
   const paused = recon.paused_strategies || [];
   const drift = recon.cumulative_drift || {};
-  const totalDrift = Object.values(drift).reduce((a, b) => a + b, 0);
-
-  if (paused.length > 0) {
-    badge.textContent = `${discrepancies} discrepancies ($${fmtNum(totalDrift)} drift) - ${paused.join(", ")} PAUSED`;
-    badge.className = "recon-badge recon-error";
-  } else if (discrepancies > 0) {
-    badge.textContent = `${discrepancies} discrepancies ($${fmtNum(totalDrift)} drift)`;
-    badge.className = "recon-badge recon-warn";
-  } else {
-    badge.textContent = "0 discrepancies";
-    badge.className = "recon-badge recon-ok";
-  }
+  const totalDrift = Object.values(drift).reduce((a,b) => a+b, 0);
+  if (paused.length > 0) { badge.textContent = `${disc} discrepancies ($${fmtNum(totalDrift)} drift) - ${paused.join(", ")} PAUSED`; badge.className = "recon-badge recon-error"; }
+  else if (disc > 0) { badge.textContent = `${disc} discrepancies ($${fmtNum(totalDrift)} drift)`; badge.className = "recon-badge recon-warn"; }
+  else { badge.textContent = "0 discrepancies"; badge.className = "recon-badge recon-ok"; }
 }
 
-// ── 2. KPI Cards ──
+// ── KPIs ──
 function renderKPIs() {
+  if (!DATA || !DATA.account) return;
   const a = DATA.account;
-  // Account Balance
   document.getElementById("kpiBalance").textContent = "$" + fmtNum(a.net_liquidation);
-
-  // Today's P&L from global_daily_pnl
-  const pnl = DATA.global_daily_pnl;
+  const pnl = DATA.global_daily_pnl || 0;
   const pnlEl = document.getElementById("kpiPnl");
   pnlEl.textContent = (pnl >= 0 ? "+$" : "-$") + fmtNum(Math.abs(pnl));
   pnlEl.className = "kpi-value " + (pnl >= 0 ? "positive" : "negative");
-
-  // Unrealized P&L sub-label
-  const uPnl = a.unrealized_pnl;
-  document.getElementById("kpiPnlSub").textContent = "Realized: " + (a.realized_pnl >= 0 ? "+" : "") + "$" + fmtNum(Math.abs(a.realized_pnl));
-
-  // Open Positions summed from strategies
+  document.getElementById("kpiPnlSub").textContent = "Realized: " + (a.realized_pnl >= 0 ? "+" : "") + "$" + fmtNum(Math.abs(a.realized_pnl || 0));
   let totalPos = 0;
-  for (const s of Object.values(DATA.strategies)) totalPos += s.open_positions;
+  if (DATA.strategies) for (const s of Object.values(DATA.strategies)) totalPos += s.open_positions || 0;
   document.getElementById("kpiPositions").textContent = totalPos;
-
-  // Unrealized P&L from account.unrealized_pnl
+  const uPnl = a.unrealized_pnl || 0;
   const uEl = document.getElementById("kpiUnrealized");
   uEl.textContent = (uPnl >= 0 ? "+$" : "-$") + fmtNum(Math.abs(uPnl));
   uEl.className = "kpi-value " + (uPnl >= 0 ? "positive" : "negative");
-
-  // VIX — use last trade data to estimate, or show placeholder
   const lastVixTrade = [...(DATA.trades || [])].reverse().find(t => t.strategy === "vix_mean_reversion");
-  if (lastVixTrade) {
-    const m = lastVixTrade.reason.match(/VIX[= @]+([\d.]+)/);
-    if (m) document.getElementById("kpiVix").textContent = parseFloat(m[1]).toFixed(1);
-  }
+  if (lastVixTrade) { const m = lastVixTrade.reason.match(/VIX[= @]+([\d.]+)/); if (m) document.getElementById("kpiVix").textContent = parseFloat(m[1]).toFixed(1); }
 }
 
-// ── 3. Strategy Cards with Guardrails ──
+// ── Strategy cards ──
 function renderStrategies() {
   const grid = document.getElementById("stratGrid");
+  if (!DATA || !DATA.strategies || Object.keys(DATA.strategies).length === 0) {
+    grid.innerHTML = emptyHTML("\u23F3", "Waiting for bot data...", "Strategy cards appear when the bot connects");
+    return;
+  }
   grid.innerHTML = "";
   const guardrails = DATA.guardrails || {};
   const gStrats = guardrails.strategies || {};
   const portfolioPaused = guardrails.portfolio_paused || false;
-
   for (const [key, strat] of Object.entries(DATA.strategies)) {
     const info = STRAT_DISPLAY[key] || {label: key, desc: "", color: "var(--text-dim)"};
     const gData = gStrats[key] || {};
     const isPausedLoss = gData.paused_daily_loss || false;
     const isPaused = portfolioPaused || isPausedLoss;
-
-    // Determine tag
-    let tagLabel = strat.state;
-    let tagClass = "tag-" + strat.state;
+    let tagLabel = strat.state, tagClass = "tag-" + strat.state;
     if (isPaused) { tagLabel = "PAUSED"; tagClass = "tag-paused"; }
-
     const pnlClass = strat.daily_pnl >= 0 ? "positive" : "negative";
-
-    // Win rate
     const winRate = gData.win_rate;
     const winRateStr = winRate != null ? (winRate * 100).toFixed(1) + "%" : "N/A";
     const tradeCount = gData.trade_count || 0;
-
-    // Param adjustments
     const currentParams = gData.current_params || {};
     const defaults = DEFAULT_PARAMS[key] || {};
     let paramRows = "";
-    for (const [p, defaultVal] of Object.entries(defaults)) {
-      const curVal = currentParams[p];
-      if (curVal != null && curVal !== defaultVal) {
-        const paramLabel = p.replace(/_/g, " ");
-        paramRows += `<div class="strat-row"><span>${paramLabel}</span><span class="param-adjusted">${curVal} (was ${defaultVal})</span></div>`;
-      }
-    }
-
-    // Pause reason
+    for (const [p, dv] of Object.entries(defaults)) { const cv = currentParams[p]; if (cv != null && cv !== dv) paramRows += `<div class="strat-row"><span>${p.replace(/_/g," ")}</span><span class="param-adjusted">${cv} (was ${dv})</span></div>`; }
     let pauseRow = "";
     if (portfolioPaused) pauseRow = `<div class="strat-row"><span>Pause reason</span><span class="negative">Portfolio drawdown</span></div>`;
     else if (isPausedLoss) pauseRow = `<div class="strat-row"><span>Pause reason</span><span class="negative">Daily loss limit</span></div>`;
-
-    grid.innerHTML += `
-      <div class="strat-card" style="border-top:2px solid ${isPaused ? 'var(--red)' : info.color}">
-        <div class="strat-name">${info.label} <span class="strat-tag ${tagClass}">${tagLabel}</span></div>
-        <div style="font-size:11px;color:var(--text-dim);margin-bottom:10px">${info.desc}</div>
-        <div class="strat-row"><span>Daily P&L</span><span class="${pnlClass}">${strat.daily_pnl >= 0 ? "+" : ""}$${fmtNum(Math.abs(strat.daily_pnl))}</span></div>
-        <div class="strat-row"><span>Open Positions</span><span>${strat.open_positions} / ${strat.max_position_size}</span></div>
-        <div class="strat-row"><span>Max Daily Loss</span><span>$${fmtNum(strat.max_daily_loss)}</span></div>
-        <div class="strat-row"><span>Enabled</span><span>${strat.enabled ? "\u2713" : "\u2717"}</span></div>
-        <hr class="strat-divider">
-        <div class="strat-row"><span>Win Rate (${tradeCount} trades)</span><span>${winRateStr}</span></div>
-        ${paramRows}
-        ${pauseRow}
-      </div>`;
+    grid.innerHTML += `<div class="strat-card" style="border-top:2px solid ${isPaused ? 'var(--red)' : info.color}"><div class="strat-name">${info.label} <span class="strat-tag ${tagClass}">${tagLabel}</span></div><div style="font-size:11px;color:var(--text-dim);margin-bottom:10px">${info.desc}</div><div class="strat-row"><span>Daily P&L</span><span class="${pnlClass}">${strat.daily_pnl >= 0 ? "+" : ""}$${fmtNum(Math.abs(strat.daily_pnl))}</span></div><div class="strat-row"><span>Open Positions</span><span>${strat.open_positions} / ${strat.max_position_size}</span></div><div class="strat-row"><span>Max Daily Loss</span><span>$${fmtNum(strat.max_daily_loss)}</span></div><div class="strat-row"><span>Enabled</span><span>${strat.enabled ? "\u2713" : "\u2717"}</span></div><hr class="strat-divider"><div class="strat-row"><span>Win Rate (${tradeCount} trades)</span><span>${winRateStr}</span></div>${paramRows}${pauseRow}</div>`;
   }
 }
 
-// ── P&L Chart (pure SVG) ──
+// ── P&L Chart ──
 function renderChart() {
   const svg = document.getElementById("pnlChart");
+  if (!DATA) { svg.innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="#64748b" font-size="13">Waiting for bot data...</text>'; return; }
   const series = DATA.cumulative_pnl || [];
-  if (!series.length) { svg.innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="#64748b" font-size="13">No P&L data</text>'; return; }
-
+  if (!series.length) { svg.innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="#64748b" font-size="13">No P&L data yet</text>'; return; }
   const W = svg.clientWidth || 700, H = svg.clientHeight || 200;
-  const pad = {t:20, r:20, b:30, l:60};
-  const cw = W - pad.l - pad.r, ch = H - pad.t - pad.b;
-
+  const pad = {t:20,r:20,b:30,l:60}, cw = W-pad.l-pad.r, ch = H-pad.t-pad.b;
   const vals = series.map(d => d.pnl);
-  const minV = Math.min(0, ...vals), maxV = Math.max(0, ...vals) || 1;
-  const scaleX = i => pad.l + (i / (series.length - 1 || 1)) * cw;
-  const scaleY = v => pad.t + ch - ((v - minV) / (maxV - minV || 1)) * ch;
-
-  let path = "", area = `M${scaleX(0)},${scaleY(0)}`;
-  series.forEach((d, i) => {
-    const x = scaleX(i), y = scaleY(d.pnl);
-    path += (i === 0 ? "M" : "L") + x + "," + y;
-    area += "L" + x + "," + y;
-  });
-  area += `L${scaleX(series.length - 1)},${scaleY(0)}Z`;
-
-  let gridLines = "";
-  const steps = 4;
-  for (let i = 0; i <= steps; i++) {
-    const v = minV + (maxV - minV) * (i / steps);
-    const y = scaleY(v);
-    gridLines += `<line x1="${pad.l}" y1="${y}" x2="${W - pad.r}" y2="${y}" stroke="#1e293b" stroke-width="1"/>`;
-    gridLines += `<text x="${pad.l - 8}" y="${y + 4}" text-anchor="end" fill="#64748b" font-size="10">$${Math.round(v)}</text>`;
-  }
-
-  let dateLabels = "";
-  const labelCount = Math.min(series.length, 6);
-  const step = Math.max(1, Math.floor((series.length - 1) / (labelCount - 1)));
-  for (let i = 0; i < series.length; i += step) {
-    const x = scaleX(i);
-    const parts = series[i].date.split("-");
-    dateLabels += `<text x="${x}" y="${H - 5}" text-anchor="middle" fill="#64748b" font-size="10">${parts[1]}/${parts[2]}</text>`;
-  }
-
-  const lastPnl = vals[vals.length - 1];
-  const lineColor = lastPnl >= 0 ? "#10b981" : "#ef4444";
-  const fillColor = lastPnl >= 0 ? "rgba(16,185,129,0.08)" : "rgba(239,68,68,0.08)";
-
-  svg.innerHTML = `
-    ${gridLines}${dateLabels}
-    <path d="${area}" fill="${fillColor}"/>
-    <path d="${path}" fill="none" stroke="${lineColor}" stroke-width="2"/>
-    ${series.map((d, i) => `<circle cx="${scaleX(i)}" cy="${scaleY(d.pnl)}" r="3" fill="${lineColor}" stroke="var(--surface)" stroke-width="1.5"/>`).join("")}
-    <line x1="${pad.l}" y1="${scaleY(0)}" x2="${W - pad.r}" y2="${scaleY(0)}" stroke="#334155" stroke-width="1" stroke-dasharray="4,3"/>
-  `;
+  const minV = Math.min(0,...vals), maxV = Math.max(0,...vals) || 1;
+  const scaleX = i => pad.l + (i/(series.length-1||1))*cw;
+  const scaleY = v => pad.t + ch - ((v-minV)/(maxV-minV||1))*ch;
+  let path="", area=`M${scaleX(0)},${scaleY(0)}`;
+  series.forEach((d,i) => { const x=scaleX(i),y=scaleY(d.pnl); path+=(i===0?"M":"L")+x+","+y; area+="L"+x+","+y; });
+  area+=`L${scaleX(series.length-1)},${scaleY(0)}Z`;
+  let gl=""; for(let i=0;i<=4;i++){const v=minV+(maxV-minV)*(i/4),y=scaleY(v);gl+=`<line x1="${pad.l}" y1="${y}" x2="${W-pad.r}" y2="${y}" stroke="#1e293b" stroke-width="1"/><text x="${pad.l-8}" y="${y+4}" text-anchor="end" fill="#64748b" font-size="10">$${Math.round(v)}</text>`;}
+  let dl=""; const lc=Math.min(series.length,6),st=Math.max(1,Math.floor((series.length-1)/(lc-1)));
+  for(let i=0;i<series.length;i+=st){const x=scaleX(i),p=series[i].date.split("-");dl+=`<text x="${x}" y="${H-5}" text-anchor="middle" fill="#64748b" font-size="10">${p[1]}/${p[2]}</text>`;}
+  const lp=vals[vals.length-1],lc2=lp>=0?"#10b981":"#ef4444",fc=lp>=0?"rgba(16,185,129,0.08)":"rgba(239,68,68,0.08)";
+  svg.innerHTML=`${gl}${dl}<path d="${area}" fill="${fc}"/><path d="${path}" fill="none" stroke="${lc2}" stroke-width="2"/>${series.map((d,i)=>`<circle cx="${scaleX(i)}" cy="${scaleY(d.pnl)}" r="3" fill="${lc2}" stroke="var(--surface)" stroke-width="1.5"/>`).join("")}<line x1="${pad.l}" y1="${scaleY(0)}" x2="${W-pad.r}" y2="${scaleY(0)}" stroke="#334155" stroke-width="1" stroke-dasharray="4,3"/>`;
 }
 
-// ── 4. Trade History with IB Fields ──
+// ── Trade history ──
 function renderTrades() {
   const filtersEl = document.getElementById("tradeFilters");
-  const strats = ["all", ...Object.keys(DATA.strategies)];
-  filtersEl.innerHTML = strats.map(s =>
-    `<button class="filter-btn ${activeFilter === s ? 'active' : ''}" onclick="setFilter('${s}')">${s === 'all' ? 'All' : s.replace(/_/g,' ')}</button>`
-  ).join("");
-
-  // Build set of order_ids with discrepancies
-  const reconDrift = (DATA.reconciliation && DATA.reconciliation.cumulative_drift) || {};
-
   const tbody = document.getElementById("tradeBody");
-  const trades = (DATA.trades || []).filter(t => activeFilter === "all" || t.strategy === activeFilter);
-  tbody.innerHTML = trades.slice().reverse().map(t => {
-    const dt = new Date(t.timestamp);
-    const timeStr = dt.toLocaleDateString("en-US", {month:"short",day:"numeric"}) + " " + dt.toLocaleTimeString("en-US", {hour:"2-digit",minute:"2-digit"});
-    const legsStr = t.legs.map(l => `${l.action} ${l.quantity} ${l.symbol}${l.strike ? " "+l.strike+l.right : ""}`).join(", ");
-
-    // IB fill price
-    const fillStr = t.ib_fill_price != null ? "$" + fmtNum(t.ib_fill_price) : "\u2014";
-
-    // IB commission
-    const commStr = t.ib_commission != null ? "$" + fmtNum(t.ib_commission) : "\u2014";
-
-    // P&L: prefer ib_realized_pnl, fallback to pnl
-    const pnlVal = t.ib_realized_pnl != null ? t.ib_realized_pnl : t.pnl;
-    const pnlStr = pnlVal != null ? ((pnlVal >= 0 ? "+" : "") + "$" + fmtNum(Math.abs(pnlVal))) : "\u2014";
-    const pnlClass = pnlVal != null ? (pnlVal >= 0 ? "positive" : "negative") : "";
-
-    const statusClass = t.status === "filled" ? "badge-filled" : t.status === "executed" ? "badge-exec" : t.status === "pending" ? "badge-pending" : "badge-rejected";
-
-    // Highlight if strategy has discrepancy drift
-    const hasDiscrepancy = reconDrift[t.strategy] && reconDrift[t.strategy] > 0;
-    const rowClass = hasDiscrepancy && t.ib_fill_price != null ? "recon-discrepancy" : "";
-
-    return `<tr class="${rowClass}">
-      <td style="white-space:nowrap">${timeStr}</td>
-      <td>${t.strategy.replace(/_/g," ")}</td>
-      <td>${t.action}</td>
-      <td style="font-size:11px">${legsStr}</td>
-      <td>${fillStr}</td>
-      <td>${commStr}</td>
-      <td class="${pnlClass}">${pnlStr}</td>
-      <td><span class="badge ${statusClass}">${t.status}</span></td>
-    </tr>`;
-  }).join("");
-}
-
-function setFilter(f) { activeFilter = f; renderTrades(); }
-
-// ── Events calendar ──
-function renderEvents() {
-  const today = new Date().toISOString().slice(0, 10);
-  const upcoming = EVENTS.filter(e => e[0] >= today).slice(0, 10);
-  const list = document.getElementById("eventList");
-  list.innerHTML = upcoming.map(([date, type]) => {
-    const d = new Date(date + "T12:00:00");
-    const dateStr = d.toLocaleDateString("en-US", {weekday:"short", month:"short", day:"numeric"});
-    const typeClass = "event-" + type.toLowerCase();
-    return `<li class="event-item">
-      <span class="event-date">${dateStr}</span>
-      <span class="event-type ${typeClass}">${type}</span>
-      <span>${type === "FOMC" ? "Fed Rate Decision" : type === "CPI" ? "Consumer Price Index" : "Nonfarm Payrolls"}</span>
-    </li>`;
-  }).join("");
-}
-
-// ── Alert log ──
-function renderAlerts() {
-  const log = document.getElementById("alertLog");
-  log.innerHTML = (DATA.alerts || []).slice().reverse().map(a => {
-    const dt = new Date(a.timestamp);
-    const time = dt.toLocaleTimeString("en-US", {hour:"2-digit", minute:"2-digit"});
-    const levelClass = "level-" + a.level;
-    return `<div class="alert-item">
-      <span class="alert-time">${time}</span>
-      <span class="alert-level ${levelClass}">${a.level.replace(/_/g," ")}</span>
-      <span class="alert-msg">${a.message}</span>
-    </div>`;
-  }).join("");
-}
-
-// ── 7. Approval Panel ──
-function renderApprovalPanel() {
-  const panel = document.getElementById("approvalPanel");
-  const body = document.getElementById("approvalBody");
-  const signals = DATA.pending_signals || [];
-
-  if (!DATA.approval_mode || signals.length === 0) {
-    panel.classList.remove("visible");
+  if (!DATA || !DATA.trades || DATA.trades.length === 0) {
+    filtersEl.innerHTML = "";
+    tbody.innerHTML = `<tr><td colspan="8">${emptyHTML("\u{1F4CB}", "No trades yet", "Trades will appear here when the bot executes signals")}</td></tr>`;
     return;
   }
-
-  panel.classList.add("visible");
-  body.innerHTML = signals.map((s, i) => {
-    const legsStr = (s.legs || []).map(l =>
-      `${l.action} ${l.quantity} ${l.symbol}${l.strike ? " " + l.strike + l.right : ""}`
-    ).join(", ");
-    return `<div class="approval-signal">
-      <div class="approval-signal-header">
-        <span class="approval-signal-strat">${(s.strategy || "").replace(/_/g, " ")}</span>
-        <span class="approval-signal-action">${s.action}</span>
-      </div>
-      <div class="approval-signal-reason">${s.reason}</div>
-      <div class="approval-signal-legs">${legsStr}</div>
-    </div>`;
+  const strats = ["all", ...Object.keys(DATA.strategies || {})];
+  filtersEl.innerHTML = strats.map(s => `<button class="filter-btn ${activeFilter===s?'active':''}" onclick="setFilter('${s}')">${s==='all'?'All':s.replace(/_/g,' ')}</button>`).join("");
+  const reconDrift = (DATA.reconciliation && DATA.reconciliation.cumulative_drift) || {};
+  const trades = DATA.trades.filter(t => activeFilter==="all" || t.strategy===activeFilter);
+  tbody.innerHTML = trades.slice().reverse().map(t => {
+    const dt=new Date(t.timestamp);
+    const timeStr=dt.toLocaleDateString("en-US",{month:"short",day:"numeric"})+" "+dt.toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit"});
+    const legsStr=t.legs.map(l=>`${l.action} ${l.quantity} ${l.symbol}${l.strike?" "+l.strike+l.right:""}`).join(", ");
+    const fillStr=t.ib_fill_price!=null?"$"+fmtNum(t.ib_fill_price):"\u2014";
+    const commStr=t.ib_commission!=null?"$"+fmtNum(t.ib_commission):"\u2014";
+    const pnlVal=t.ib_realized_pnl!=null?t.ib_realized_pnl:t.pnl;
+    const pnlStr=pnlVal!=null?((pnlVal>=0?"+":"")+"\u0024"+fmtNum(Math.abs(pnlVal))):"\u2014";
+    const pnlClass=pnlVal!=null?(pnlVal>=0?"positive":"negative"):"";
+    const sc=t.status==="filled"?"badge-filled":t.status==="executed"?"badge-exec":t.status==="pending"?"badge-pending":"badge-rejected";
+    const hd=reconDrift[t.strategy]&&reconDrift[t.strategy]>0;
+    const rc=hd&&t.ib_fill_price!=null?"recon-discrepancy":"";
+    return `<tr class="${rc}"><td style="white-space:nowrap">${timeStr}</td><td>${t.strategy.replace(/_/g," ")}</td><td>${t.action}</td><td style="font-size:11px">${legsStr}</td><td>${fillStr}</td><td>${commStr}</td><td class="${pnlClass}">${pnlStr}</td><td><span class="badge ${sc}">${t.status}</span></td></tr>`;
   }).join("");
 }
+function setFilter(f){activeFilter=f;renderTrades();}
 
-// ── 6. Debug Panel ──
-function toggleDebug() {
-  const body = document.getElementById("debugBody");
-  const chevron = document.getElementById("debugChevron");
-  const isOpen = body.classList.toggle("open");
-  chevron.classList.toggle("open", isOpen);
+// ── Events ──
+function renderEvents() {
+  const today=new Date().toISOString().slice(0,10);
+  const upcoming=EVENTS.filter(e=>e[0]>=today).slice(0,10);
+  const list=document.getElementById("eventList");
+  if(!upcoming.length){list.innerHTML=emptyHTML("\u{1F4C5}","No upcoming events","Calendar will populate with FOMC/CPI/NFP dates");return;}
+  list.innerHTML=upcoming.map(([date,type])=>{const d=new Date(date+"T12:00:00");const ds=d.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"});return`<li class="event-item"><span class="event-date">${ds}</span><span class="event-type event-${type.toLowerCase()}">${type}</span><span>${type==="FOMC"?"Fed Rate Decision":type==="CPI"?"Consumer Price Index":"Nonfarm Payrolls"}</span></li>`;}).join("");
 }
 
+// ── Alerts ──
+function renderAlerts() {
+  const el=document.getElementById("alertLog");
+  if(!DATA||!DATA.alerts||DATA.alerts.length===0){el.innerHTML=emptyHTML("\u{1F514}","No alerts","Alerts will appear when the bot starts running");return;}
+  el.innerHTML=DATA.alerts.slice().reverse().map(a=>{const dt=new Date(a.timestamp);const time=dt.toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit"});return`<div class="alert-item"><span class="alert-time">${time}</span><span class="alert-level level-${a.level}">${a.level.replace(/_/g," ")}</span><span class="alert-msg">${a.message}</span></div>`;}).join("");
+}
+
+// ── Approval panel ──
+function renderApprovalPanel() {
+  const panel=document.getElementById("approvalPanel"),body=document.getElementById("approvalBody");
+  if(!DATA||!DATA.approval_mode||!(DATA.pending_signals||[]).length){panel.classList.remove("visible");return;}
+  panel.classList.add("visible");
+  body.innerHTML=DATA.pending_signals.map(s=>{const ls=(s.legs||[]).map(l=>`${l.action} ${l.quantity} ${l.symbol}${l.strike?" "+l.strike+l.right:""}`).join(", ");return`<div class="approval-signal"><div class="approval-signal-header"><span class="approval-signal-strat">${(s.strategy||"").replace(/_/g," ")}</span><span class="approval-signal-action">${s.action}</span></div><div class="approval-signal-reason">${s.reason}</div><div class="approval-signal-legs">${ls}</div></div>`;}).join("");
+}
+
+// ── Debug panel ──
+function toggleDebug(){const b=document.getElementById("debugBody"),c=document.getElementById("debugChevron");const o=b.classList.toggle("open");c.classList.toggle("open",o);}
 function updateDebugPanel() {
-  document.getElementById("dbgUrl").textContent = DATA_URL;
-  document.getElementById("dbgFetchTime").textContent = lastFetchTime ? lastFetchTime.toLocaleTimeString() : "--";
-  document.getElementById("dbgHttpStatus").textContent = lastHttpStatus != null ? lastHttpStatus : "--";
-  document.getElementById("dbgTradeCount").textContent = DATA ? (DATA.trades || []).length : "--";
-
-  // Reconciliation debug
-  const recon = DATA ? DATA.reconciliation : null;
-  if (recon) {
-    document.getElementById("dbgFills").textContent = recon.total_fills_tracked;
-    document.getElementById("dbgDiscrepancies").textContent = recon.total_discrepancies;
-    const driftEntries = Object.entries(recon.cumulative_drift || {});
-    document.getElementById("dbgDrift").textContent = driftEntries.length > 0
-      ? driftEntries.map(([k,v]) => `${k}: $${fmtNum(v)}`).join(", ")
-      : "none";
-    document.getElementById("dbgReconPaused").textContent = (recon.paused_strategies || []).length > 0
-      ? recon.paused_strategies.join(", ")
-      : "none";
-  }
-
-  // Guardrails debug
-  const guardrails = DATA ? DATA.guardrails : null;
-  if (guardrails) {
-    document.getElementById("dbgPortfolioPaused").textContent = guardrails.portfolio_paused ? "YES" : "no";
-    document.getElementById("dbgHighWater").textContent = guardrails.account_high_water ? "$" + fmtNum(guardrails.account_high_water) : "--";
-  }
-
-  // ML Models from health data (or show placeholder)
-  const mlContainer = document.getElementById("dbgMlModels");
-  const mlData = HEALTH_DATA ? HEALTH_DATA.ml_models : null;
-  if (mlData) {
-    mlContainer.innerHTML = Object.entries(mlData).map(([name, m]) => `
-      <div class="debug-row">
-        <span class="debug-label">${name.replace(/_/g, " ")}</span>
-        <span class="debug-value">${m.active ? "ACTIVE" : "inactive"} | ${m.trades} trades | thresh: ${m.threshold}</span>
-      </div>
-    `).join("");
-  } else {
-    mlContainer.innerHTML = `<div class="debug-row"><span class="debug-label">Status</span><span class="debug-value">Health endpoint not available (static mode)</span></div>`;
-  }
+  document.getElementById("dbgUrl").textContent=DATA_URL;
+  document.getElementById("dbgFetchTime").textContent=lastFetchTime?lastFetchTime.toLocaleTimeString():"--";
+  document.getElementById("dbgHttpStatus").textContent=lastHttpStatus!=null?lastHttpStatus:"--";
+  document.getElementById("dbgTradeCount").textContent=DATA?(DATA.trades||[]).length:"0";
+  const recon=DATA?DATA.reconciliation:null;
+  if(recon){document.getElementById("dbgFills").textContent=recon.total_fills_tracked;document.getElementById("dbgDiscrepancies").textContent=recon.total_discrepancies;const de=Object.entries(recon.cumulative_drift||{});document.getElementById("dbgDrift").textContent=de.length>0?de.map(([k,v])=>`${k}: $${fmtNum(v)}`).join(", "):"none";document.getElementById("dbgReconPaused").textContent=(recon.paused_strategies||[]).length>0?recon.paused_strategies.join(", "):"none";}
+  const g=DATA?DATA.guardrails:null;
+  if(g){document.getElementById("dbgPortfolioPaused").textContent=g.portfolio_paused?"YES":"no";document.getElementById("dbgHighWater").textContent=g.account_high_water?"$"+fmtNum(g.account_high_water):"--";}
+  const mc=document.getElementById("dbgMlModels"),ml=HEALTH_DATA?HEALTH_DATA.ml_models:null;
+  if(ml){mc.innerHTML=Object.entries(ml).map(([n,m])=>`<div class="debug-row"><span class="debug-label">${n.replace(/_/g," ")}</span><span class="debug-value">${m.active?"ACTIVE":"inactive"} | ${m.trades} trades | thresh: ${m.threshold}</span></div>`).join("");}
+  else{mc.innerHTML=`<div class="debug-row"><span class="debug-label">Status</span><span class="debug-value">Health endpoint not available (static mode)</span></div>`;}
 }
 
 // ── Approval toggle ──
-document.getElementById("approvalToggle").addEventListener("change", e => {
-  if (DATA) DATA.approval_mode = e.target.checked;
-  renderApprovalPanel();
-});
+document.getElementById("approvalToggle").addEventListener("change",e=>{if(DATA)DATA.approval_mode=e.target.checked;renderApprovalPanel();});
 
 // ── Helpers ──
-function fmtNum(n) { return Number(n).toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2}); }
+function fmtNum(n){return Number(n).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});}
 
-// ── Init ──
+// ── Init: show empty state immediately, then try to load data ──
+renderEmptyDashboard();
+renderEvents();
 loadData();
 loadHealth();
 setInterval(loadData, 30000);
 setInterval(loadHealth, 60000);
-// Auto-refresh the freshness age every 30 seconds (independent of data fetch)
 setInterval(updateFreshnessDisplay, 30000);
-window.addEventListener("resize", () => { if (DATA) renderChart(); });
+window.addEventListener("resize",()=>{if(DATA)renderChart();});
 </script>
 </body>
 </html>

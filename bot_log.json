@@ -1,0 +1,107 @@
+{
+  "updated_at": "2026-03-25T20:31:01.811141+00:00",
+  "account": {
+    "net_liquidation": 1000690.8,
+    "total_cash": 1000000.0,
+    "unrealized_pnl": 0.0,
+    "realized_pnl": 0.0
+  },
+  "global_daily_pnl": 0.0,
+  "approval_mode": false,
+  "strategies": {
+    "spx_0dte": {
+      "state": "scanning",
+      "daily_pnl": 0.0,
+      "open_positions": 0,
+      "enabled": true,
+      "max_daily_loss": 300.0,
+      "max_position_size": 5
+    },
+    "vix_mean_reversion": {
+      "state": "scanning",
+      "daily_pnl": 0.0,
+      "open_positions": 0,
+      "enabled": true,
+      "max_daily_loss": 400.0,
+      "max_position_size": 5
+    },
+    "event_vol_selling": {
+      "state": "scanning",
+      "daily_pnl": 0.0,
+      "open_positions": 0,
+      "enabled": true,
+      "max_daily_loss": 500.0,
+      "max_position_size": 3
+    },
+    "gamma_scalping": {
+      "state": "scanning",
+      "daily_pnl": 0.0,
+      "open_positions": 0,
+      "enabled": true,
+      "max_daily_loss": 400.0,
+      "max_position_size": 5
+    }
+  },
+  "guardrails": {
+    "portfolio_paused": false,
+    "account_high_water": 1000000.0,
+    "strategies": {
+      "spx_0dte": {
+        "win_rate": null,
+        "trade_count": 0,
+        "daily_pnl": 0.0,
+        "open_positions": 0,
+        "paused_daily_loss": false,
+        "current_params": {
+          "vix_threshold": 25.0,
+          "spread_width": 5,
+          "spx_offset": 50
+        }
+      },
+      "vix_mean_reversion": {
+        "win_rate": null,
+        "trade_count": 0,
+        "daily_pnl": 0.0,
+        "open_positions": 0,
+        "paused_daily_loss": false,
+        "current_params": {
+          "vix_spike_threshold": 25.0,
+          "rsi_overbought": 70
+        }
+      },
+      "event_vol_selling": {
+        "win_rate": null,
+        "trade_count": 0,
+        "daily_pnl": 0.0,
+        "open_positions": 0,
+        "paused_daily_loss": false,
+        "current_params": {
+          "ic_put_offset": 75,
+          "ic_call_offset": 75,
+          "ic_wing_width": 25
+        }
+      },
+      "gamma_scalping": {
+        "win_rate": null,
+        "trade_count": 0,
+        "daily_pnl": 0.0,
+        "open_positions": 0,
+        "paused_daily_loss": false,
+        "current_params": {
+          "delta_hedge_threshold": 10,
+          "straddle_dte": 30
+        }
+      }
+    }
+  },
+  "reconciliation": {
+    "total_fills_tracked": 0,
+    "total_discrepancies": 0,
+    "cumulative_drift": {},
+    "paused_strategies": [],
+    "drift_limit": 50.0
+  },
+  "trades": [],
+  "pending_signals": [],
+  "alerts": []
+}

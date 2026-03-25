@@ -42,6 +42,67 @@
       "max_position_size": 5
     }
   },
+  "guardrails": {
+    "portfolio_paused": false,
+    "account_high_water": 1003200.00,
+    "strategies": {
+      "spx_0dte": {
+        "win_rate": 0.714,
+        "trade_count": 14,
+        "daily_pnl": 150.00,
+        "open_positions": 0,
+        "paused_daily_loss": false,
+        "current_params": {
+          "vix_threshold": 26.0,
+          "spread_width": 5,
+          "spx_offset": 45
+        }
+      },
+      "vix_mean_reversion": {
+        "win_rate": 0.600,
+        "trade_count": 5,
+        "daily_pnl": 0.0,
+        "open_positions": 0,
+        "paused_daily_loss": false,
+        "current_params": {
+          "vix_spike_threshold": 25.0,
+          "rsi_overbought": 70
+        }
+      },
+      "event_vol_selling": {
+        "win_rate": 0.833,
+        "trade_count": 6,
+        "daily_pnl": 190.50,
+        "open_positions": 1,
+        "paused_daily_loss": false,
+        "current_params": {
+          "ic_put_offset": 70,
+          "ic_call_offset": 70,
+          "ic_wing_width": 25
+        }
+      },
+      "gamma_scalping": {
+        "win_rate": null,
+        "trade_count": 3,
+        "daily_pnl": 0.0,
+        "open_positions": 1,
+        "paused_daily_loss": false,
+        "current_params": {
+          "delta_hedge_threshold": 10,
+          "straddle_dte": 30
+        }
+      }
+    }
+  },
+  "reconciliation": {
+    "total_fills_tracked": 28,
+    "total_discrepancies": 2,
+    "cumulative_drift": {
+      "spx_0dte": 3.25
+    },
+    "paused_strategies": [],
+    "drift_limit": 50.0
+  },
   "trades": [
     {
       "timestamp": "2026-03-20T14:30:00+00:00",
@@ -53,8 +114,11 @@
         {"symbol": "SPX", "action": "SELL", "quantity": 1, "order_type": "MKT", "strike": 5525, "right": "P", "expiry": "20260320"},
         {"symbol": "SPX", "action": "BUY", "quantity": 1, "order_type": "MKT", "strike": 5520, "right": "P", "expiry": "20260320"}
       ],
-      "status": "executed",
-      "pnl": 180.00
+      "status": "filled",
+      "pnl": 180.00,
+      "ib_fill_price": 1.80,
+      "ib_commission": 2.10,
+      "ib_realized_pnl": 177.90
     },
     {
       "timestamp": "2026-03-21T15:00:00+00:00",
@@ -66,8 +130,11 @@
         {"symbol": "SPX", "action": "SELL", "quantity": 1, "order_type": "MKT", "strike": 5540, "right": "P", "expiry": "20260321"},
         {"symbol": "SPX", "action": "BUY", "quantity": 1, "order_type": "MKT", "strike": 5535, "right": "P", "expiry": "20260321"}
       ],
-      "status": "executed",
-      "pnl": 210.00
+      "status": "filled",
+      "pnl": 210.00,
+      "ib_fill_price": 2.13,
+      "ib_commission": 2.10,
+      "ib_realized_pnl": 210.90
     },
     {
       "timestamp": "2026-03-22T19:00:00+00:00",
@@ -79,8 +146,11 @@
         {"symbol": "VIX", "action": "SELL", "quantity": 1, "order_type": "MKT", "strike": 26, "right": "C", "expiry": "20260422"},
         {"symbol": "VIX", "action": "BUY", "quantity": 1, "order_type": "MKT", "strike": 28.5, "right": "C", "expiry": "20260422"}
       ],
-      "status": "executed",
-      "pnl": 320.00
+      "status": "filled",
+      "pnl": 320.00,
+      "ib_fill_price": 3.20,
+      "ib_commission": 2.10,
+      "ib_realized_pnl": 317.90
     },
     {
       "timestamp": "2026-03-24T18:15:00+00:00",
@@ -94,8 +164,11 @@
         {"symbol": "SPX", "action": "SELL", "quantity": 1, "order_type": "MKT", "strike": 5650, "right": "C", "expiry": "20260326"},
         {"symbol": "SPX", "action": "BUY", "quantity": 1, "order_type": "MKT", "strike": 5675, "right": "C", "expiry": "20260326"}
       ],
-      "status": "executed",
-      "pnl": 190.50
+      "status": "filled",
+      "pnl": 190.50,
+      "ib_fill_price": 4.85,
+      "ib_commission": 4.20,
+      "ib_realized_pnl": 190.30
     },
     {
       "timestamp": "2026-03-24T14:35:00+00:00",
@@ -107,8 +180,11 @@
         {"symbol": "SPY", "action": "BUY", "quantity": 1, "order_type": "MKT", "strike": 560, "right": "C", "expiry": "20260424"},
         {"symbol": "SPY", "action": "BUY", "quantity": 1, "order_type": "MKT", "strike": 560, "right": "P", "expiry": "20260424"}
       ],
-      "status": "executed",
-      "pnl": null
+      "status": "filled",
+      "pnl": null,
+      "ib_fill_price": 12.45,
+      "ib_commission": 2.10,
+      "ib_realized_pnl": null
     },
     {
       "timestamp": "2026-03-25T15:10:00+00:00",
@@ -119,8 +195,11 @@
       "legs": [
         {"symbol": "SPY", "action": "SELL", "quantity": 12, "order_type": "MKT", "strike": null, "right": null, "expiry": null}
       ],
-      "status": "executed",
-      "pnl": null
+      "status": "filled",
+      "pnl": null,
+      "ib_fill_price": 559.85,
+      "ib_commission": 1.00,
+      "ib_realized_pnl": null
     },
     {
       "timestamp": "2026-03-25T14:30:00+00:00",
@@ -132,8 +211,11 @@
         {"symbol": "SPX", "action": "SELL", "quantity": 1, "order_type": "MKT", "strike": 5530, "right": "P", "expiry": "20260325"},
         {"symbol": "SPX", "action": "BUY", "quantity": 1, "order_type": "MKT", "strike": 5525, "right": "P", "expiry": "20260325"}
       ],
-      "status": "executed",
-      "pnl": 150.00
+      "status": "filled",
+      "pnl": 150.00,
+      "ib_fill_price": 1.53,
+      "ib_commission": 2.10,
+      "ib_realized_pnl": 150.90
     }
   ],
   "pending_signals": [],

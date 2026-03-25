@@ -19,10 +19,19 @@ a{color:var(--accent);text-decoration:none}
 .header h1{font-size:16px;font-weight:600;letter-spacing:1px}
 .header h1 span{color:var(--green)}
 .header-right{display:flex;align-items:center;gap:16px;font-size:12px;color:var(--text-dim)}
-.status-dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s infinite}
+.status-dot{width:8px;height:8px;border-radius:50%;display:inline-block;animation:pulse 2s infinite}
+.dot-green{background:var(--green)}
+.dot-yellow{background:var(--amber)}
+.dot-red{background:var(--red)}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
 .container{max-width:1440px;margin:0 auto;padding:20px 24px}
+
+/* Recon badge */
+.recon-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;padding:3px 10px;border-radius:10px;font-weight:500}
+.recon-ok{background:rgba(16,185,129,.15);color:var(--green)}
+.recon-warn{background:rgba(245,158,11,.15);color:var(--amber)}
+.recon-error{background:rgba(239,68,68,.15);color:var(--red)}
 
 /* KPI Cards */
 .kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px}
@@ -59,8 +68,11 @@ a{color:var(--accent);text-decoration:none}
 .tag-idle{background:rgba(100,116,139,.15);color:var(--text-dim)}
 .tag-cooldown{background:rgba(245,158,11,.15);color:var(--amber)}
 .tag-ready{background:rgba(168,85,247,.15);color:var(--purple)}
+.tag-paused{background:rgba(239,68,68,.15);color:var(--red)}
 .strat-row{display:flex;justify-content:space-between;font-size:12px;padding:3px 0;color:var(--text-dim)}
 .strat-row span:last-child{color:var(--text)}
+.strat-divider{border:none;border-top:1px solid var(--border);margin:6px 0}
+.param-adjusted{color:var(--amber) !important;font-weight:600}
 
 /* Chart */
 .chart-container{position:relative;height:220px;padding:8px 0}
@@ -73,8 +85,10 @@ table{width:100%;border-collapse:collapse;font-size:12px}
 th{text-align:left;padding:8px 12px;border-bottom:1px solid var(--border);color:var(--text-dim);font-weight:500;text-transform:uppercase;letter-spacing:.5px;font-size:11px}
 td{padding:8px 12px;border-bottom:1px solid rgba(30,41,59,.5)}
 tr:hover td{background:rgba(59,130,246,.03)}
+tr.recon-discrepancy td{background:rgba(245,158,11,.05)}
 .badge{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:500}
 .badge-exec{background:rgba(16,185,129,.15);color:var(--green)}
+.badge-filled{background:rgba(16,185,129,.15);color:var(--green)}
 .badge-pending{background:rgba(245,158,11,.15);color:var(--amber)}
 .badge-rejected{background:rgba(239,68,68,.15);color:var(--red)}
 
@@ -112,10 +126,39 @@ tr:hover td{background:rgba(59,130,246,.03)}
 .level-fill{background:rgba(16,185,129,.15);color:var(--green)}
 .level-order_placed{background:rgba(59,130,246,.15);color:var(--accent)}
 .level-risk_rejected{background:rgba(239,68,68,.15);color:var(--red)}
+.level-ml_rejected{background:rgba(168,85,247,.15);color:var(--purple)}
 .level-pending_approval{background:rgba(245,158,11,.15);color:var(--amber)}
 .level-approved{background:rgba(16,185,129,.15);color:var(--green)}
 .level-rejected{background:rgba(239,68,68,.15);color:var(--red)}
 .alert-msg{color:var(--text);word-break:break-word}
+
+/* Approval panel */
+.approval-panel{background:var(--surface);border:2px solid var(--amber);border-radius:8px;margin-bottom:20px;overflow:hidden;display:none}
+.approval-panel.visible{display:block}
+.approval-header{padding:12px 16px;background:rgba(245,158,11,.08);border-bottom:1px solid var(--amber);display:flex;align-items:center;gap:8px}
+.approval-header .card-title{color:var(--amber)}
+.approval-body{padding:16px}
+.approval-signal{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:12px;margin-bottom:8px}
+.approval-signal:last-child{margin-bottom:0}
+.approval-signal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.approval-signal-strat{font-size:13px;font-weight:600}
+.approval-signal-action{font-size:11px;color:var(--text-dim)}
+.approval-signal-reason{font-size:12px;color:var(--text-dim);margin-bottom:8px}
+.approval-signal-legs{font-size:11px;color:var(--text)}
+
+/* Debug panel */
+.debug-panel{background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-top:20px}
+.debug-toggle{padding:12px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--text-dim);user-select:none}
+.debug-toggle:hover{color:var(--text)}
+.debug-chevron{transition:transform .2s;font-size:10px}
+.debug-chevron.open{transform:rotate(180deg)}
+.debug-body{display:none;padding:0 16px 16px;font-size:11px}
+.debug-body.open{display:block}
+.debug-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(30,41,59,.3)}
+.debug-row:last-child{border:none}
+.debug-label{color:var(--text-dim)}
+.debug-value{color:var(--text);text-align:right;max-width:60%;overflow:hidden;text-overflow:ellipsis}
+.debug-section{font-size:11px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px;padding:8px 0 4px;margin-top:8px;border-bottom:1px solid var(--border)}
 
 /* Responsive */
 @media(max-width:1200px){.strat-grid{grid-template-columns:repeat(2,1fr)}.kpi-row{grid-template-columns:repeat(3,1fr)}}
@@ -133,16 +176,25 @@ tr:hover td{background:rgba(59,130,246,.03)}
 <div class="header">
   <h1>IBKR <span>PAPER</span> TRADING BOT</h1>
   <div class="header-right">
+    <span id="reconBadge" class="recon-badge recon-ok">0 discrepancies</span>
     <div class="toggle-wrap">
       <span class="toggle-label">APPROVAL MODE</span>
       <label class="toggle"><input type="checkbox" id="approvalToggle"><span class="toggle-slider"></span></label>
     </div>
     <span>Account: DUP442332</span>
-    <span><span class="status-dot"></span> Last update: <span id="lastUpdate">--</span></span>
+    <span><span id="freshnessDot" class="status-dot dot-green"></span> <span id="freshnessText">Last data: --</span></span>
   </div>
 </div>
 
 <div class="container">
+  <!-- Approval Panel (shown when approval_mode && pending_signals) -->
+  <div id="approvalPanel" class="approval-panel">
+    <div class="approval-header">
+      <span class="card-title">Pending Signals — Awaiting Approval</span>
+    </div>
+    <div class="approval-body" id="approvalBody"></div>
+  </div>
+
   <!-- KPI Cards -->
   <div class="kpi-row">
     <div class="kpi">
@@ -161,9 +213,9 @@ tr:hover td{background:rgba(59,130,246,.03)}
       <div class="kpi-sub">Across all strategies</div>
     </div>
     <div class="kpi">
-      <div class="kpi-label">SPX Level</div>
-      <div class="kpi-value" id="kpiSpx">--</div>
-      <div class="kpi-sub" id="kpiSpxSub">S&P 500 Index</div>
+      <div class="kpi-label">Unrealized P&L</div>
+      <div class="kpi-value" id="kpiUnrealized">--</div>
+      <div class="kpi-sub">Mark-to-market</div>
     </div>
     <div class="kpi">
       <div class="kpi-label">VIX Level</div>
@@ -200,7 +252,7 @@ tr:hover td{background:rgba(59,130,246,.03)}
       </div>
       <div class="card-body table-wrap">
         <table>
-          <thead><tr><th>Time</th><th>Strategy</th><th>Action</th><th>Details</th><th>P&L</th><th>Status</th></tr></thead>
+          <thead><tr><th>Time</th><th>Strategy</th><th>Action</th><th>Details</th><th>Fill</th><th>Comm</th><th>P&L</th><th>Status</th></tr></thead>
           <tbody id="tradeBody"></tbody>
         </table>
       </div>
@@ -210,6 +262,31 @@ tr:hover td{background:rgba(59,130,246,.03)}
       <div class="card-body">
         <div class="alert-log" id="alertLog"></div>
       </div>
+    </div>
+  </div>
+
+  <!-- Debug Panel (collapsible) -->
+  <div class="debug-panel">
+    <div class="debug-toggle" onclick="toggleDebug()">
+      <span>Debug Panel</span>
+      <span id="debugChevron" class="debug-chevron">&#9660;</span>
+    </div>
+    <div id="debugBody" class="debug-body">
+      <div class="debug-section">Data Source</div>
+      <div class="debug-row"><span class="debug-label">JSON URL</span><span class="debug-value" id="dbgUrl">--</span></div>
+      <div class="debug-row"><span class="debug-label">Last fetch</span><span class="debug-value" id="dbgFetchTime">--</span></div>
+      <div class="debug-row"><span class="debug-label">HTTP status</span><span class="debug-value" id="dbgHttpStatus">--</span></div>
+      <div class="debug-row"><span class="debug-label">Total trades in file</span><span class="debug-value" id="dbgTradeCount">--</span></div>
+      <div class="debug-section">Reconciliation</div>
+      <div class="debug-row"><span class="debug-label">Total fills tracked</span><span class="debug-value" id="dbgFills">--</span></div>
+      <div class="debug-row"><span class="debug-label">Total discrepancies</span><span class="debug-value" id="dbgDiscrepancies">--</span></div>
+      <div class="debug-row"><span class="debug-label">Cumulative drift</span><span class="debug-value" id="dbgDrift">--</span></div>
+      <div class="debug-row"><span class="debug-label">Paused (recon)</span><span class="debug-value" id="dbgReconPaused">--</span></div>
+      <div class="debug-section">Guardrails</div>
+      <div class="debug-row"><span class="debug-label">Portfolio paused</span><span class="debug-value" id="dbgPortfolioPaused">--</span></div>
+      <div class="debug-row"><span class="debug-label">Account high-water</span><span class="debug-value" id="dbgHighWater">--</span></div>
+      <div class="debug-section">ML Models (from /health)</div>
+      <div id="dbgMlModels"></div>
     </div>
   </div>
 </div>
@@ -234,76 +311,213 @@ const STRAT_DISPLAY = {
   gamma_scalping: {label:"Gamma Scalping", desc:"ATM SPY straddles + delta hedging", color:"var(--cyan)"},
 };
 
+// Default guardrail params per strategy (to detect adjustments)
+const DEFAULT_PARAMS = {
+  spx_0dte: {vix_threshold:25, spread_width:5, spx_offset:50},
+  vix_mean_reversion: {vix_spike_threshold:25, rsi_overbought:70},
+  event_vol_selling: {ic_put_offset:75, ic_call_offset:75, ic_wing_width:25},
+  gamma_scalping: {delta_hedge_threshold:10, straddle_dte:30},
+};
+
 let DATA = null;
+let HEALTH_DATA = null;
 let activeFilter = "all";
+let lastFetchTime = null;
+let lastHttpStatus = null;
+const DATA_URL = "bot_log.json";
 
 // ── Data loading ──
 async function loadData() {
+  const url = DATA_URL + "?t=" + Date.now();
   try {
-    const resp = await fetch("bot_log.json?t=" + Date.now());
+    const resp = await fetch(url);
+    lastHttpStatus = resp.status;
+    lastFetchTime = new Date();
     if (!resp.ok) return;
     DATA = await resp.json();
     render();
-  } catch(e) { console.error("Failed to load bot_log.json:", e); }
+  } catch(e) {
+    lastHttpStatus = "ERR";
+    lastFetchTime = new Date();
+    console.error("Failed to load bot_log.json:", e);
+  }
+  updateDebugPanel();
+}
+
+async function loadHealth() {
+  // Try loading health endpoint (only works when bot is running locally or via proxy)
+  try {
+    const resp = await fetch("health.json?t=" + Date.now());
+    if (resp.ok) { HEALTH_DATA = await resp.json(); }
+  } catch(e) { /* health endpoint not available in static mode */ }
+  updateDebugPanel();
 }
 
 // ── Render everything ──
 function render() {
   if (!DATA) return;
+  renderFreshness();
+  renderReconBadge();
   renderKPIs();
   renderStrategies();
   renderChart();
   renderTrades();
   renderEvents();
   renderAlerts();
+  renderApprovalPanel();
   document.getElementById("approvalToggle").checked = DATA.approval_mode;
-  const dt = new Date(DATA.updated_at);
-  document.getElementById("lastUpdate").textContent = dt.toLocaleTimeString();
 }
 
-// ── KPIs ──
+// ── 1. Data Freshness Indicator ──
+function renderFreshness() {
+  if (!DATA || !DATA.updated_at) return;
+  updateFreshnessDisplay();
+}
+
+function updateFreshnessDisplay() {
+  if (!DATA || !DATA.updated_at) return;
+  const updatedAt = new Date(DATA.updated_at);
+  const now = new Date();
+  const diffMs = now - updatedAt;
+  const diffMin = Math.floor(diffMs / 60000);
+  const diffSec = Math.floor(diffMs / 1000);
+
+  // Format the time
+  const timeStr = updatedAt.toLocaleTimeString("en-US", {hour:"numeric", minute:"2-digit"});
+
+  // Format the age
+  let ageStr;
+  if (diffMin < 1) ageStr = `${diffSec}s ago`;
+  else if (diffMin < 60) ageStr = `${diffMin} min ago`;
+  else if (diffMin < 1440) ageStr = `${Math.floor(diffMin/60)}h ${diffMin%60}m ago`;
+  else ageStr = `${Math.floor(diffMin/1440)}d ago`;
+
+  document.getElementById("freshnessText").textContent = `Last data: ${timeStr} (${ageStr})`;
+
+  // Color the dot
+  const dot = document.getElementById("freshnessDot");
+  dot.className = "status-dot";
+  if (diffMin < 5) dot.classList.add("dot-green");
+  else if (diffMin <= 60) dot.classList.add("dot-yellow");
+  else dot.classList.add("dot-red");
+}
+
+// ── 5. Reconciliation Badge ──
+function renderReconBadge() {
+  const badge = document.getElementById("reconBadge");
+  const recon = DATA.reconciliation;
+  if (!recon) {
+    badge.textContent = "No recon data";
+    badge.className = "recon-badge recon-ok";
+    return;
+  }
+
+  const discrepancies = recon.total_discrepancies || 0;
+  const paused = recon.paused_strategies || [];
+  const drift = recon.cumulative_drift || {};
+  const totalDrift = Object.values(drift).reduce((a, b) => a + b, 0);
+
+  if (paused.length > 0) {
+    badge.textContent = `${discrepancies} discrepancies ($${fmtNum(totalDrift)} drift) - ${paused.join(", ")} PAUSED`;
+    badge.className = "recon-badge recon-error";
+  } else if (discrepancies > 0) {
+    badge.textContent = `${discrepancies} discrepancies ($${fmtNum(totalDrift)} drift)`;
+    badge.className = "recon-badge recon-warn";
+  } else {
+    badge.textContent = "0 discrepancies";
+    badge.className = "recon-badge recon-ok";
+  }
+}
+
+// ── 2. KPI Cards ──
 function renderKPIs() {
   const a = DATA.account;
+  // Account Balance
   document.getElementById("kpiBalance").textContent = "$" + fmtNum(a.net_liquidation);
+
+  // Today's P&L from global_daily_pnl
   const pnl = DATA.global_daily_pnl;
   const pnlEl = document.getElementById("kpiPnl");
   pnlEl.textContent = (pnl >= 0 ? "+$" : "-$") + fmtNum(Math.abs(pnl));
   pnlEl.className = "kpi-value " + (pnl >= 0 ? "positive" : "negative");
-  document.getElementById("kpiPnlSub").textContent = "Unrealized: " + (a.unrealized_pnl >= 0 ? "+" : "") + "$" + fmtNum(Math.abs(a.unrealized_pnl));
 
+  // Unrealized P&L sub-label
+  const uPnl = a.unrealized_pnl;
+  document.getElementById("kpiPnlSub").textContent = "Realized: " + (a.realized_pnl >= 0 ? "+" : "") + "$" + fmtNum(Math.abs(a.realized_pnl));
+
+  // Open Positions summed from strategies
   let totalPos = 0;
   for (const s of Object.values(DATA.strategies)) totalPos += s.open_positions;
   document.getElementById("kpiPositions").textContent = totalPos;
 
-  // SPX/VIX — use last trade data to estimate, or show placeholder
-  const lastSpxTrade = [...DATA.trades].reverse().find(t => t.strategy === "spx_0dte" || t.strategy === "event_vol_selling");
-  if (lastSpxTrade) {
-    const m = lastSpxTrade.reason.match(/SPX @ ([\d.]+)/);
-    if (m) document.getElementById("kpiSpx").textContent = parseFloat(m[1]).toLocaleString();
-  }
-  const lastVixTrade = [...DATA.trades].reverse().find(t => t.strategy === "vix_mean_reversion");
+  // Unrealized P&L from account.unrealized_pnl
+  const uEl = document.getElementById("kpiUnrealized");
+  uEl.textContent = (uPnl >= 0 ? "+$" : "-$") + fmtNum(Math.abs(uPnl));
+  uEl.className = "kpi-value " + (uPnl >= 0 ? "positive" : "negative");
+
+  // VIX — use last trade data to estimate, or show placeholder
+  const lastVixTrade = [...(DATA.trades || [])].reverse().find(t => t.strategy === "vix_mean_reversion");
   if (lastVixTrade) {
-    const m = lastVixTrade.reason.match(/VIX @ ([\d.]+)/);
+    const m = lastVixTrade.reason.match(/VIX[= @]+([\d.]+)/);
     if (m) document.getElementById("kpiVix").textContent = parseFloat(m[1]).toFixed(1);
   }
 }
 
-// ── Strategy cards ──
+// ── 3. Strategy Cards with Guardrails ──
 function renderStrategies() {
   const grid = document.getElementById("stratGrid");
   grid.innerHTML = "";
+  const guardrails = DATA.guardrails || {};
+  const gStrats = guardrails.strategies || {};
+  const portfolioPaused = guardrails.portfolio_paused || false;
+
   for (const [key, strat] of Object.entries(DATA.strategies)) {
     const info = STRAT_DISPLAY[key] || {label: key, desc: "", color: "var(--text-dim)"};
-    const tagClass = "tag-" + strat.state;
+    const gData = gStrats[key] || {};
+    const isPausedLoss = gData.paused_daily_loss || false;
+    const isPaused = portfolioPaused || isPausedLoss;
+
+    // Determine tag
+    let tagLabel = strat.state;
+    let tagClass = "tag-" + strat.state;
+    if (isPaused) { tagLabel = "PAUSED"; tagClass = "tag-paused"; }
+
     const pnlClass = strat.daily_pnl >= 0 ? "positive" : "negative";
+
+    // Win rate
+    const winRate = gData.win_rate;
+    const winRateStr = winRate != null ? (winRate * 100).toFixed(1) + "%" : "N/A";
+    const tradeCount = gData.trade_count || 0;
+
+    // Param adjustments
+    const currentParams = gData.current_params || {};
+    const defaults = DEFAULT_PARAMS[key] || {};
+    let paramRows = "";
+    for (const [p, defaultVal] of Object.entries(defaults)) {
+      const curVal = currentParams[p];
+      if (curVal != null && curVal !== defaultVal) {
+        const paramLabel = p.replace(/_/g, " ");
+        paramRows += `<div class="strat-row"><span>${paramLabel}</span><span class="param-adjusted">${curVal} (was ${defaultVal})</span></div>`;
+      }
+    }
+
+    // Pause reason
+    let pauseRow = "";
+    if (portfolioPaused) pauseRow = `<div class="strat-row"><span>Pause reason</span><span class="negative">Portfolio drawdown</span></div>`;
+    else if (isPausedLoss) pauseRow = `<div class="strat-row"><span>Pause reason</span><span class="negative">Daily loss limit</span></div>`;
+
     grid.innerHTML += `
-      <div class="strat-card" style="border-top:2px solid ${info.color}">
-        <div class="strat-name">${info.label} <span class="strat-tag ${tagClass}">${strat.state}</span></div>
+      <div class="strat-card" style="border-top:2px solid ${isPaused ? 'var(--red)' : info.color}">
+        <div class="strat-name">${info.label} <span class="strat-tag ${tagClass}">${tagLabel}</span></div>
         <div style="font-size:11px;color:var(--text-dim);margin-bottom:10px">${info.desc}</div>
         <div class="strat-row"><span>Daily P&L</span><span class="${pnlClass}">${strat.daily_pnl >= 0 ? "+" : ""}$${fmtNum(Math.abs(strat.daily_pnl))}</span></div>
         <div class="strat-row"><span>Open Positions</span><span>${strat.open_positions} / ${strat.max_position_size}</span></div>
         <div class="strat-row"><span>Max Daily Loss</span><span>$${fmtNum(strat.max_daily_loss)}</span></div>
-        <div class="strat-row"><span>Enabled</span><span>${strat.enabled ? "✓" : "✗"}</span></div>
+        <div class="strat-row"><span>Enabled</span><span>${strat.enabled ? "\u2713" : "\u2717"}</span></div>
+        <hr class="strat-divider">
+        <div class="strat-row"><span>Win Rate (${tradeCount} trades)</span><span>${winRateStr}</span></div>
+        ${paramRows}
+        ${pauseRow}
       </div>`;
   }
 }
@@ -331,7 +545,6 @@ function renderChart() {
   });
   area += `L${scaleX(series.length - 1)},${scaleY(0)}Z`;
 
-  // Grid lines
   let gridLines = "";
   const steps = 4;
   for (let i = 0; i <= steps; i++) {
@@ -341,7 +554,6 @@ function renderChart() {
     gridLines += `<text x="${pad.l - 8}" y="${y + 4}" text-anchor="end" fill="#64748b" font-size="10">$${Math.round(v)}</text>`;
   }
 
-  // Date labels
   let dateLabels = "";
   const labelCount = Math.min(series.length, 6);
   const step = Math.max(1, Math.floor((series.length - 1) / (labelCount - 1)));
@@ -364,29 +576,48 @@ function renderChart() {
   `;
 }
 
-// ── Trade history ──
+// ── 4. Trade History with IB Fields ──
 function renderTrades() {
-  // Build filter buttons
   const filtersEl = document.getElementById("tradeFilters");
   const strats = ["all", ...Object.keys(DATA.strategies)];
   filtersEl.innerHTML = strats.map(s =>
     `<button class="filter-btn ${activeFilter === s ? 'active' : ''}" onclick="setFilter('${s}')">${s === 'all' ? 'All' : s.replace(/_/g,' ')}</button>`
   ).join("");
 
+  // Build set of order_ids with discrepancies
+  const reconDrift = (DATA.reconciliation && DATA.reconciliation.cumulative_drift) || {};
+
   const tbody = document.getElementById("tradeBody");
-  const trades = DATA.trades.filter(t => activeFilter === "all" || t.strategy === activeFilter);
+  const trades = (DATA.trades || []).filter(t => activeFilter === "all" || t.strategy === activeFilter);
   tbody.innerHTML = trades.slice().reverse().map(t => {
     const dt = new Date(t.timestamp);
     const timeStr = dt.toLocaleDateString("en-US", {month:"short",day:"numeric"}) + " " + dt.toLocaleTimeString("en-US", {hour:"2-digit",minute:"2-digit"});
     const legsStr = t.legs.map(l => `${l.action} ${l.quantity} ${l.symbol}${l.strike ? " "+l.strike+l.right : ""}`).join(", ");
-    const pnlStr = t.pnl != null ? ((t.pnl >= 0 ? "+" : "") + "$" + fmtNum(Math.abs(t.pnl))) : "—";
-    const pnlClass = t.pnl != null ? (t.pnl >= 0 ? "positive" : "negative") : "";
-    const statusClass = t.status === "executed" ? "badge-exec" : t.status === "pending" ? "badge-pending" : "badge-rejected";
-    return `<tr>
+
+    // IB fill price
+    const fillStr = t.ib_fill_price != null ? "$" + fmtNum(t.ib_fill_price) : "\u2014";
+
+    // IB commission
+    const commStr = t.ib_commission != null ? "$" + fmtNum(t.ib_commission) : "\u2014";
+
+    // P&L: prefer ib_realized_pnl, fallback to pnl
+    const pnlVal = t.ib_realized_pnl != null ? t.ib_realized_pnl : t.pnl;
+    const pnlStr = pnlVal != null ? ((pnlVal >= 0 ? "+" : "") + "$" + fmtNum(Math.abs(pnlVal))) : "\u2014";
+    const pnlClass = pnlVal != null ? (pnlVal >= 0 ? "positive" : "negative") : "";
+
+    const statusClass = t.status === "filled" ? "badge-filled" : t.status === "executed" ? "badge-exec" : t.status === "pending" ? "badge-pending" : "badge-rejected";
+
+    // Highlight if strategy has discrepancy drift
+    const hasDiscrepancy = reconDrift[t.strategy] && reconDrift[t.strategy] > 0;
+    const rowClass = hasDiscrepancy && t.ib_fill_price != null ? "recon-discrepancy" : "";
+
+    return `<tr class="${rowClass}">
       <td style="white-space:nowrap">${timeStr}</td>
       <td>${t.strategy.replace(/_/g," ")}</td>
       <td>${t.action}</td>
       <td style="font-size:11px">${legsStr}</td>
+      <td>${fillStr}</td>
+      <td>${commStr}</td>
       <td class="${pnlClass}">${pnlStr}</td>
       <td><span class="badge ${statusClass}">${t.status}</span></td>
     </tr>`;
@@ -415,7 +646,7 @@ function renderEvents() {
 // ── Alert log ──
 function renderAlerts() {
   const log = document.getElementById("alertLog");
-  log.innerHTML = DATA.alerts.slice().reverse().map(a => {
+  log.innerHTML = (DATA.alerts || []).slice().reverse().map(a => {
     const dt = new Date(a.timestamp);
     const time = dt.toLocaleTimeString("en-US", {hour:"2-digit", minute:"2-digit"});
     const levelClass = "level-" + a.level;
@@ -427,9 +658,87 @@ function renderAlerts() {
   }).join("");
 }
 
+// ── 7. Approval Panel ──
+function renderApprovalPanel() {
+  const panel = document.getElementById("approvalPanel");
+  const body = document.getElementById("approvalBody");
+  const signals = DATA.pending_signals || [];
+
+  if (!DATA.approval_mode || signals.length === 0) {
+    panel.classList.remove("visible");
+    return;
+  }
+
+  panel.classList.add("visible");
+  body.innerHTML = signals.map((s, i) => {
+    const legsStr = (s.legs || []).map(l =>
+      `${l.action} ${l.quantity} ${l.symbol}${l.strike ? " " + l.strike + l.right : ""}`
+    ).join(", ");
+    return `<div class="approval-signal">
+      <div class="approval-signal-header">
+        <span class="approval-signal-strat">${(s.strategy || "").replace(/_/g, " ")}</span>
+        <span class="approval-signal-action">${s.action}</span>
+      </div>
+      <div class="approval-signal-reason">${s.reason}</div>
+      <div class="approval-signal-legs">${legsStr}</div>
+    </div>`;
+  }).join("");
+}
+
+// ── 6. Debug Panel ──
+function toggleDebug() {
+  const body = document.getElementById("debugBody");
+  const chevron = document.getElementById("debugChevron");
+  const isOpen = body.classList.toggle("open");
+  chevron.classList.toggle("open", isOpen);
+}
+
+function updateDebugPanel() {
+  document.getElementById("dbgUrl").textContent = DATA_URL;
+  document.getElementById("dbgFetchTime").textContent = lastFetchTime ? lastFetchTime.toLocaleTimeString() : "--";
+  document.getElementById("dbgHttpStatus").textContent = lastHttpStatus != null ? lastHttpStatus : "--";
+  document.getElementById("dbgTradeCount").textContent = DATA ? (DATA.trades || []).length : "--";
+
+  // Reconciliation debug
+  const recon = DATA ? DATA.reconciliation : null;
+  if (recon) {
+    document.getElementById("dbgFills").textContent = recon.total_fills_tracked;
+    document.getElementById("dbgDiscrepancies").textContent = recon.total_discrepancies;
+    const driftEntries = Object.entries(recon.cumulative_drift || {});
+    document.getElementById("dbgDrift").textContent = driftEntries.length > 0
+      ? driftEntries.map(([k,v]) => `${k}: $${fmtNum(v)}`).join(", ")
+      : "none";
+    document.getElementById("dbgReconPaused").textContent = (recon.paused_strategies || []).length > 0
+      ? recon.paused_strategies.join(", ")
+      : "none";
+  }
+
+  // Guardrails debug
+  const guardrails = DATA ? DATA.guardrails : null;
+  if (guardrails) {
+    document.getElementById("dbgPortfolioPaused").textContent = guardrails.portfolio_paused ? "YES" : "no";
+    document.getElementById("dbgHighWater").textContent = guardrails.account_high_water ? "$" + fmtNum(guardrails.account_high_water) : "--";
+  }
+
+  // ML Models from health data (or show placeholder)
+  const mlContainer = document.getElementById("dbgMlModels");
+  const mlData = HEALTH_DATA ? HEALTH_DATA.ml_models : null;
+  if (mlData) {
+    mlContainer.innerHTML = Object.entries(mlData).map(([name, m]) => `
+      <div class="debug-row">
+        <span class="debug-label">${name.replace(/_/g, " ")}</span>
+        <span class="debug-value">${m.active ? "ACTIVE" : "inactive"} | ${m.trades} trades | thresh: ${m.threshold}</span>
+      </div>
+    `).join("");
+  } else {
+    mlContainer.innerHTML = `<div class="debug-row"><span class="debug-label">Status</span><span class="debug-value">Health endpoint not available (static mode)</span></div>`;
+  }
+}
+
 // ── Approval toggle ──
 document.getElementById("approvalToggle").addEventListener("change", e => {
   if (DATA) DATA.approval_mode = e.target.checked;
+  renderApprovalPanel();
 });
 
 // ── Helpers ──
@@ -437,7 +746,11 @@ function fmtNum(n) { return Number(n).toLocaleString("en-US", {minimumFractionDi
 
 // ── Init ──
 loadData();
+loadHealth();
 setInterval(loadData, 30000);
+setInterval(loadHealth, 60000);
+// Auto-refresh the freshness age every 30 seconds (independent of data fetch)
+setInterval(updateFreshnessDisplay, 30000);
 window.addEventListener("resize", () => { if (DATA) renderChart(); });
 </script>
 </body>

@@ -1,0 +1,161 @@
+{
+  "updated_at": "2026-03-25T18:30:00+00:00",
+  "account": {
+    "net_liquidation": 1002450.75,
+    "total_cash": 985200.00,
+    "unrealized_pnl": 1250.75,
+    "realized_pnl": 1200.00
+  },
+  "global_daily_pnl": 340.50,
+  "approval_mode": false,
+  "strategies": {
+    "spx_0dte": {
+      "state": "scanning",
+      "daily_pnl": 150.00,
+      "open_positions": 0,
+      "enabled": true,
+      "max_daily_loss": 300.0,
+      "max_position_size": 5
+    },
+    "vix_mean_reversion": {
+      "state": "scanning",
+      "daily_pnl": 0.0,
+      "open_positions": 0,
+      "enabled": true,
+      "max_daily_loss": 400.0,
+      "max_position_size": 5
+    },
+    "event_vol_selling": {
+      "state": "positioned",
+      "daily_pnl": 190.50,
+      "open_positions": 1,
+      "enabled": true,
+      "max_daily_loss": 500.0,
+      "max_position_size": 3
+    },
+    "gamma_scalping": {
+      "state": "positioned",
+      "daily_pnl": 0.0,
+      "open_positions": 1,
+      "enabled": true,
+      "max_daily_loss": 400.0,
+      "max_position_size": 5
+    }
+  },
+  "trades": [
+    {
+      "timestamp": "2026-03-20T14:30:00+00:00",
+      "strategy": "spx_0dte",
+      "action": "SELL",
+      "reason": "0DTE put credit spread: sell 5525P / buy 5520P, SPX @ 5575.0",
+      "order_ids": [1001, 1002],
+      "legs": [
+        {"symbol": "SPX", "action": "SELL", "quantity": 1, "order_type": "MKT", "strike": 5525, "right": "P", "expiry": "20260320"},
+        {"symbol": "SPX", "action": "BUY", "quantity": 1, "order_type": "MKT", "strike": 5520, "right": "P", "expiry": "20260320"}
+      ],
+      "status": "executed",
+      "pnl": 180.00
+    },
+    {
+      "timestamp": "2026-03-21T15:00:00+00:00",
+      "strategy": "spx_0dte",
+      "action": "SELL",
+      "reason": "0DTE put credit spread: sell 5540P / buy 5535P, SPX @ 5590.0",
+      "order_ids": [1003, 1004],
+      "legs": [
+        {"symbol": "SPX", "action": "SELL", "quantity": 1, "order_type": "MKT", "strike": 5540, "right": "P", "expiry": "20260321"},
+        {"symbol": "SPX", "action": "BUY", "quantity": 1, "order_type": "MKT", "strike": 5535, "right": "P", "expiry": "20260321"}
+      ],
+      "status": "executed",
+      "pnl": 210.00
+    },
+    {
+      "timestamp": "2026-03-22T19:00:00+00:00",
+      "strategy": "vix_mean_reversion",
+      "action": "SELL",
+      "reason": "VIX spike: sell 26C/28.5C spread, VIX @ 27.3, RSI 74.2",
+      "order_ids": [1005, 1006],
+      "legs": [
+        {"symbol": "VIX", "action": "SELL", "quantity": 1, "order_type": "MKT", "strike": 26, "right": "C", "expiry": "20260422"},
+        {"symbol": "VIX", "action": "BUY", "quantity": 1, "order_type": "MKT", "strike": 28.5, "right": "C", "expiry": "20260422"}
+      ],
+      "status": "executed",
+      "pnl": 320.00
+    },
+    {
+      "timestamp": "2026-03-24T18:15:00+00:00",
+      "strategy": "event_vol_selling",
+      "action": "SELL",
+      "reason": "Event vol sell (CPI): IC 5475/5500P 5650/5675C, SPX @ 5575",
+      "order_ids": [1007, 1008, 1009, 1010],
+      "legs": [
+        {"symbol": "SPX", "action": "SELL", "quantity": 1, "order_type": "MKT", "strike": 5500, "right": "P", "expiry": "20260326"},
+        {"symbol": "SPX", "action": "BUY", "quantity": 1, "order_type": "MKT", "strike": 5475, "right": "P", "expiry": "20260326"},
+        {"symbol": "SPX", "action": "SELL", "quantity": 1, "order_type": "MKT", "strike": 5650, "right": "C", "expiry": "20260326"},
+        {"symbol": "SPX", "action": "BUY", "quantity": 1, "order_type": "MKT", "strike": 5675, "right": "C", "expiry": "20260326"}
+      ],
+      "status": "executed",
+      "pnl": 190.50
+    },
+    {
+      "timestamp": "2026-03-24T14:35:00+00:00",
+      "strategy": "gamma_scalping",
+      "action": "BUY",
+      "reason": "Open ATM straddle: SPY 560C + 560P (30 DTE)",
+      "order_ids": [1011, 1012],
+      "legs": [
+        {"symbol": "SPY", "action": "BUY", "quantity": 1, "order_type": "MKT", "strike": 560, "right": "C", "expiry": "20260424"},
+        {"symbol": "SPY", "action": "BUY", "quantity": 1, "order_type": "MKT", "strike": 560, "right": "P", "expiry": "20260424"}
+      ],
+      "status": "executed",
+      "pnl": null
+    },
+    {
+      "timestamp": "2026-03-25T15:10:00+00:00",
+      "strategy": "gamma_scalping",
+      "action": "SELL",
+      "reason": "Delta hedge: sell 12 SPY shares (net delta +12.3)",
+      "order_ids": [1013],
+      "legs": [
+        {"symbol": "SPY", "action": "SELL", "quantity": 12, "order_type": "MKT", "strike": null, "right": null, "expiry": null}
+      ],
+      "status": "executed",
+      "pnl": null
+    },
+    {
+      "timestamp": "2026-03-25T14:30:00+00:00",
+      "strategy": "spx_0dte",
+      "action": "SELL",
+      "reason": "0DTE put credit spread: sell 5530P / buy 5525P, SPX @ 5580.0",
+      "order_ids": [1014, 1015],
+      "legs": [
+        {"symbol": "SPX", "action": "SELL", "quantity": 1, "order_type": "MKT", "strike": 5530, "right": "P", "expiry": "20260325"},
+        {"symbol": "SPX", "action": "BUY", "quantity": 1, "order_type": "MKT", "strike": 5525, "right": "P", "expiry": "20260325"}
+      ],
+      "status": "executed",
+      "pnl": 150.00
+    }
+  ],
+  "pending_signals": [],
+  "alerts": [
+    {"timestamp": "2026-03-25T13:30:00+00:00", "level": "order_placed", "message": "Engine started with 4 strategies"},
+    {"timestamp": "2026-03-25T14:30:05+00:00", "level": "order_placed", "message": "Executed spx_0dte: 0DTE put credit spread: sell 5530P / buy 5525P, SPX @ 5580.0"},
+    {"timestamp": "2026-03-25T14:30:06+00:00", "level": "fill", "message": "Fill: SPX qty=1 @ $2.15 [spx_0dte]"},
+    {"timestamp": "2026-03-25T14:30:06+00:00", "level": "fill", "message": "Fill: SPX qty=1 @ $1.05 [spx_0dte]"},
+    {"timestamp": "2026-03-25T15:10:00+00:00", "level": "order_placed", "message": "Executed gamma_scalping: Delta hedge: sell 12 SPY shares (net delta +12.3)"},
+    {"timestamp": "2026-03-25T15:10:01+00:00", "level": "fill", "message": "Fill: SPY qty=12 @ $559.85 [gamma_scalping]"},
+    {"timestamp": "2026-03-25T18:30:00+00:00", "level": "order_placed", "message": "Bot state snapshot written"}
+  ],
+  "cumulative_pnl": [
+    {"date": "2026-03-16", "pnl": 0},
+    {"date": "2026-03-17", "pnl": 125.00},
+    {"date": "2026-03-18", "pnl": 280.00},
+    {"date": "2026-03-19", "pnl": 210.00},
+    {"date": "2026-03-20", "pnl": 390.00},
+    {"date": "2026-03-21", "pnl": 600.00},
+    {"date": "2026-03-22", "pnl": 920.00},
+    {"date": "2026-03-23", "pnl": 920.00},
+    {"date": "2026-03-24", "pnl": 1110.50},
+    {"date": "2026-03-25", "pnl": 1450.75}
+  ]
+}

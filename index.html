@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IBKR Paper Trading Dashboard</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0e17;--surface:#111827;--surface2:#1a2332;--border:#1e293b;
+  --text:#e2e8f0;--text-dim:#64748b;--accent:#3b82f6;--green:#10b981;
+  --red:#ef4444;--amber:#f59e0b;--purple:#a855f7;--cyan:#06b6d4;
+}
+body{font-family:'JetBrains Mono','Fira Code','SF Mono',monospace;background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh}
+a{color:var(--accent);text-decoration:none}
+
+/* Layout */
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.header h1{font-size:16px;font-weight:600;letter-spacing:1px}
+.header h1 span{color:var(--green)}
+.header-right{display:flex;align-items:center;gap:16px;font-size:12px;color:var(--text-dim)}
+.status-dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+.container{max-width:1440px;margin:0 auto;padding:20px 24px}
+
+/* KPI Cards */
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.kpi:nth-child(1)::before{background:var(--accent)}
+.kpi:nth-child(2)::before{background:var(--green)}
+.kpi:nth-child(3)::before{background:var(--purple)}
+.kpi:nth-child(4)::before{background:var(--cyan)}
+.kpi:nth-child(5)::before{background:var(--amber)}
+.kpi-label{font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.kpi-value{font-size:24px;font-weight:700}
+.kpi-sub{font-size:11px;color:var(--text-dim);margin-top:4px}
+.positive{color:var(--green)}
+.negative{color:var(--red)}
+
+/* Grid layout */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.grid-3-1{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:20px}
+
+/* Cards */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.card-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:1px}
+.card-body{padding:16px}
+
+/* Strategy Cards */
+.strat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.strat-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px}
+.strat-name{font-size:13px;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.strat-tag{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:500;text-transform:uppercase}
+.tag-scanning{background:rgba(59,130,246,.15);color:var(--accent)}
+.tag-positioned{background:rgba(16,185,129,.15);color:var(--green)}
+.tag-idle{background:rgba(100,116,139,.15);color:var(--text-dim)}
+.tag-cooldown{background:rgba(245,158,11,.15);color:var(--amber)}
+.tag-ready{background:rgba(168,85,247,.15);color:var(--purple)}
+.strat-row{display:flex;justify-content:space-between;font-size:12px;padding:3px 0;color:var(--text-dim)}
+.strat-row span:last-child{color:var(--text)}
+
+/* Chart */
+.chart-container{position:relative;height:220px;padding:8px 0}
+.chart-canvas{width:100%;height:100%}
+svg text{font-family:inherit}
+
+/* Table */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{text-align:left;padding:8px 12px;border-bottom:1px solid var(--border);color:var(--text-dim);font-weight:500;text-transform:uppercase;letter-spacing:.5px;font-size:11px}
+td{padding:8px 12px;border-bottom:1px solid rgba(30,41,59,.5)}
+tr:hover td{background:rgba(59,130,246,.03)}
+.badge{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:500}
+.badge-exec{background:rgba(16,185,129,.15);color:var(--green)}
+.badge-pending{background:rgba(245,158,11,.15);color:var(--amber)}
+.badge-rejected{background:rgba(239,68,68,.15);color:var(--red)}
+
+/* Filter buttons */
+.filters{display:flex;gap:6px;flex-wrap:wrap}
+.filter-btn{font-size:11px;padding:4px 10px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text-dim);cursor:pointer;font-family:inherit;transition:all .15s}
+.filter-btn:hover,.filter-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* Calendar */
+.event-list{list-style:none}
+.event-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(30,41,59,.3);font-size:12px}
+.event-item:last-child{border:none}
+.event-date{color:var(--text-dim);min-width:80px}
+.event-type{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600}
+.event-fomc{background:rgba(239,68,68,.15);color:var(--red)}
+.event-cpi{background:rgba(245,158,11,.15);color:var(--amber)}
+.event-nfp{background:rgba(59,130,246,.15);color:var(--accent)}
+
+/* Toggle */
+.toggle-wrap{display:flex;align-items:center;gap:10px}
+.toggle{position:relative;width:44px;height:24px;cursor:pointer}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:var(--border);border-radius:12px;transition:.2s}
+.toggle-slider::before{content:'';position:absolute;height:18px;width:18px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.2s}
+.toggle input:checked+.toggle-slider{background:var(--green)}
+.toggle input:checked+.toggle-slider::before{transform:translateX(20px)}
+.toggle-label{font-size:12px;color:var(--text-dim)}
+
+/* Alerts */
+.alert-log{max-height:300px;overflow-y:auto}
+.alert-item{font-size:11px;padding:6px 0;border-bottom:1px solid rgba(30,41,59,.3);display:flex;gap:8px}
+.alert-item:last-child{border:none}
+.alert-time{color:var(--text-dim);min-width:70px;flex-shrink:0}
+.alert-level{font-size:10px;padding:1px 6px;border-radius:4px;font-weight:500;min-width:60px;text-align:center;flex-shrink:0}
+.level-fill{background:rgba(16,185,129,.15);color:var(--green)}
+.level-order_placed{background:rgba(59,130,246,.15);color:var(--accent)}
+.level-risk_rejected{background:rgba(239,68,68,.15);color:var(--red)}
+.level-pending_approval{background:rgba(245,158,11,.15);color:var(--amber)}
+.level-approved{background:rgba(16,185,129,.15);color:var(--green)}
+.level-rejected{background:rgba(239,68,68,.15);color:var(--red)}
+.alert-msg{color:var(--text);word-break:break-word}
+
+/* Responsive */
+@media(max-width:1200px){.strat-grid{grid-template-columns:repeat(2,1fr)}.kpi-row{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:768px){.kpi-row,.strat-grid{grid-template-columns:1fr}.grid-2,.grid-3-1{grid-template-columns:1fr}}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--surface)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--text-dim)}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>IBKR <span>PAPER</span> TRADING BOT</h1>
+  <div class="header-right">
+    <div class="toggle-wrap">
+      <span class="toggle-label">APPROVAL MODE</span>
+      <label class="toggle"><input type="checkbox" id="approvalToggle"><span class="toggle-slider"></span></label>
+    </div>
+    <span>Account: DUP442332</span>
+    <span><span class="status-dot"></span> Last update: <span id="lastUpdate">--</span></span>
+  </div>
+</div>
+
+<div class="container">
+  <!-- KPI Cards -->
+  <div class="kpi-row">
+    <div class="kpi">
+      <div class="kpi-label">Account Balance</div>
+      <div class="kpi-value" id="kpiBalance">--</div>
+      <div class="kpi-sub">Paper Account</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Today's P&L</div>
+      <div class="kpi-value" id="kpiPnl">--</div>
+      <div class="kpi-sub" id="kpiPnlSub">--</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Open Positions</div>
+      <div class="kpi-value" id="kpiPositions">--</div>
+      <div class="kpi-sub">Across all strategies</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">SPX Level</div>
+      <div class="kpi-value" id="kpiSpx">--</div>
+      <div class="kpi-sub" id="kpiSpxSub">S&P 500 Index</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">VIX Level</div>
+      <div class="kpi-value" id="kpiVix">--</div>
+      <div class="kpi-sub" id="kpiVixSub">CBOE Volatility Index</div>
+    </div>
+  </div>
+
+  <!-- Strategy Monitor -->
+  <div class="strat-grid" id="stratGrid"></div>
+
+  <!-- Chart + Events -->
+  <div class="grid-3-1">
+    <div class="card">
+      <div class="card-header"><span class="card-title">Cumulative P&L</span></div>
+      <div class="card-body">
+        <div class="chart-container"><svg id="pnlChart" class="chart-canvas"></svg></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Upcoming Events</span></div>
+      <div class="card-body">
+        <ul class="event-list" id="eventList"></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Trade History + Alerts -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Trade History</span>
+        <div class="filters" id="tradeFilters"></div>
+      </div>
+      <div class="card-body table-wrap">
+        <table>
+          <thead><tr><th>Time</th><th>Strategy</th><th>Action</th><th>Details</th><th>P&L</th><th>Status</th></tr></thead>
+          <tbody id="tradeBody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Alert Log</span></div>
+      <div class="card-body">
+        <div class="alert-log" id="alertLog"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Economic calendar (mirrors event_vol_selling.py) ──
+const EVENTS = [
+  ["2026-01-28","FOMC"],["2026-03-18","FOMC"],["2026-05-06","FOMC"],["2026-06-17","FOMC"],
+  ["2026-07-29","FOMC"],["2026-09-16","FOMC"],["2026-11-04","FOMC"],["2026-12-16","FOMC"],
+  ["2026-01-14","CPI"],["2026-02-11","CPI"],["2026-03-11","CPI"],["2026-04-14","CPI"],
+  ["2026-05-12","CPI"],["2026-06-10","CPI"],["2026-07-14","CPI"],["2026-08-12","CPI"],
+  ["2026-09-15","CPI"],["2026-10-13","CPI"],["2026-11-10","CPI"],["2026-12-10","CPI"],
+  ["2026-01-09","NFP"],["2026-02-06","NFP"],["2026-03-06","NFP"],["2026-04-03","NFP"],
+  ["2026-05-08","NFP"],["2026-06-05","NFP"],["2026-07-02","NFP"],["2026-08-07","NFP"],
+  ["2026-09-04","NFP"],["2026-10-02","NFP"],["2026-11-06","NFP"],["2026-12-04","NFP"],
+];
+
+const STRAT_DISPLAY = {
+  spx_0dte: {label:"SPX 0DTE Credit Spreads", desc:"Put credit spreads ~50pts below SPX", color:"var(--accent)"},
+  vix_mean_reversion: {label:"VIX Mean Reversion", desc:"Sell VIX call spreads on spikes (>25 + RSI>70)", color:"var(--purple)"},
+  event_vol_selling: {label:"Event Vol Selling", desc:"Iron condors day before FOMC/CPI/NFP", color:"var(--amber)"},
+  gamma_scalping: {label:"Gamma Scalping", desc:"ATM SPY straddles + delta hedging", color:"var(--cyan)"},
+};
+
+let DATA = null;
+let activeFilter = "all";
+
+// ── Data loading ──
+async function loadData() {
+  try {
+    const resp = await fetch("bot_log.json?t=" + Date.now());
+    if (!resp.ok) return;
+    DATA = await resp.json();
+    render();
+  } catch(e) { console.error("Failed to load bot_log.json:", e); }
+}
+
+// ── Render everything ──
+function render() {
+  if (!DATA) return;
+  renderKPIs();
+  renderStrategies();
+  renderChart();
+  renderTrades();
+  renderEvents();
+  renderAlerts();
+  document.getElementById("approvalToggle").checked = DATA.approval_mode;
+  const dt = new Date(DATA.updated_at);
+  document.getElementById("lastUpdate").textContent = dt.toLocaleTimeString();
+}
+
+// ── KPIs ──
+function renderKPIs() {
+  const a = DATA.account;
+  document.getElementById("kpiBalance").textContent = "$" + fmtNum(a.net_liquidation);
+  const pnl = DATA.global_daily_pnl;
+  const pnlEl = document.getElementById("kpiPnl");
+  pnlEl.textContent = (pnl >= 0 ? "+$" : "-$") + fmtNum(Math.abs(pnl));
+  pnlEl.className = "kpi-value " + (pnl >= 0 ? "positive" : "negative");
+  document.getElementById("kpiPnlSub").textContent = "Unrealized: " + (a.unrealized_pnl >= 0 ? "+" : "") + "$" + fmtNum(Math.abs(a.unrealized_pnl));
+
+  let totalPos = 0;
+  for (const s of Object.values(DATA.strategies)) totalPos += s.open_positions;
+  document.getElementById("kpiPositions").textContent = totalPos;
+
+  // SPX/VIX — use last trade data to estimate, or show placeholder
+  const lastSpxTrade = [...DATA.trades].reverse().find(t => t.strategy === "spx_0dte" || t.strategy === "event_vol_selling");
+  if (lastSpxTrade) {
+    const m = lastSpxTrade.reason.match(/SPX @ ([\d.]+)/);
+    if (m) document.getElementById("kpiSpx").textContent = parseFloat(m[1]).toLocaleString();
+  }
+  const lastVixTrade = [...DATA.trades].reverse().find(t => t.strategy === "vix_mean_reversion");
+  if (lastVixTrade) {
+    const m = lastVixTrade.reason.match(/VIX @ ([\d.]+)/);
+    if (m) document.getElementById("kpiVix").textContent = parseFloat(m[1]).toFixed(1);
+  }
+}
+
+// ── Strategy cards ──
+function renderStrategies() {
+  const grid = document.getElementById("stratGrid");
+  grid.innerHTML = "";
+  for (const [key, strat] of Object.entries(DATA.strategies)) {
+    const info = STRAT_DISPLAY[key] || {label: key, desc: "", color: "var(--text-dim)"};
+    const tagClass = "tag-" + strat.state;
+    const pnlClass = strat.daily_pnl >= 0 ? "positive" : "negative";
+    grid.innerHTML += `
+      <div class="strat-card" style="border-top:2px solid ${info.color}">
+        <div class="strat-name">${info.label} <span class="strat-tag ${tagClass}">${strat.state}</span></div>
+        <div style="font-size:11px;color:var(--text-dim);margin-bottom:10px">${info.desc}</div>
+        <div class="strat-row"><span>Daily P&L</span><span class="${pnlClass}">${strat.daily_pnl >= 0 ? "+" : ""}$${fmtNum(Math.abs(strat.daily_pnl))}</span></div>
+        <div class="strat-row"><span>Open Positions</span><span>${strat.open_positions} / ${strat.max_position_size}</span></div>
+        <div class="strat-row"><span>Max Daily Loss</span><span>$${fmtNum(strat.max_daily_loss)}</span></div>
+        <div class="strat-row"><span>Enabled</span><span>${strat.enabled ? "✓" : "✗"}</span></div>
+      </div>`;
+  }
+}
+
+// ── P&L Chart (pure SVG) ──
+function renderChart() {
+  const svg = document.getElementById("pnlChart");
+  const series = DATA.cumulative_pnl || [];
+  if (!series.length) { svg.innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="#64748b" font-size="13">No P&L data</text>'; return; }
+
+  const W = svg.clientWidth || 700, H = svg.clientHeight || 200;
+  const pad = {t:20, r:20, b:30, l:60};
+  const cw = W - pad.l - pad.r, ch = H - pad.t - pad.b;
+
+  const vals = series.map(d => d.pnl);
+  const minV = Math.min(0, ...vals), maxV = Math.max(0, ...vals) || 1;
+  const scaleX = i => pad.l + (i / (series.length - 1 || 1)) * cw;
+  const scaleY = v => pad.t + ch - ((v - minV) / (maxV - minV || 1)) * ch;
+
+  let path = "", area = `M${scaleX(0)},${scaleY(0)}`;
+  series.forEach((d, i) => {
+    const x = scaleX(i), y = scaleY(d.pnl);
+    path += (i === 0 ? "M" : "L") + x + "," + y;
+    area += "L" + x + "," + y;
+  });
+  area += `L${scaleX(series.length - 1)},${scaleY(0)}Z`;
+
+  // Grid lines
+  let gridLines = "";
+  const steps = 4;
+  for (let i = 0; i <= steps; i++) {
+    const v = minV + (maxV - minV) * (i / steps);
+    const y = scaleY(v);
+    gridLines += `<line x1="${pad.l}" y1="${y}" x2="${W - pad.r}" y2="${y}" stroke="#1e293b" stroke-width="1"/>`;
+    gridLines += `<text x="${pad.l - 8}" y="${y + 4}" text-anchor="end" fill="#64748b" font-size="10">$${Math.round(v)}</text>`;
+  }
+
+  // Date labels
+  let dateLabels = "";
+  const labelCount = Math.min(series.length, 6);
+  const step = Math.max(1, Math.floor((series.length - 1) / (labelCount - 1)));
+  for (let i = 0; i < series.length; i += step) {
+    const x = scaleX(i);
+    const parts = series[i].date.split("-");
+    dateLabels += `<text x="${x}" y="${H - 5}" text-anchor="middle" fill="#64748b" font-size="10">${parts[1]}/${parts[2]}</text>`;
+  }
+
+  const lastPnl = vals[vals.length - 1];
+  const lineColor = lastPnl >= 0 ? "#10b981" : "#ef4444";
+  const fillColor = lastPnl >= 0 ? "rgba(16,185,129,0.08)" : "rgba(239,68,68,0.08)";
+
+  svg.innerHTML = `
+    ${gridLines}${dateLabels}
+    <path d="${area}" fill="${fillColor}"/>
+    <path d="${path}" fill="none" stroke="${lineColor}" stroke-width="2"/>
+    ${series.map((d, i) => `<circle cx="${scaleX(i)}" cy="${scaleY(d.pnl)}" r="3" fill="${lineColor}" stroke="var(--surface)" stroke-width="1.5"/>`).join("")}
+    <line x1="${pad.l}" y1="${scaleY(0)}" x2="${W - pad.r}" y2="${scaleY(0)}" stroke="#334155" stroke-width="1" stroke-dasharray="4,3"/>
+  `;
+}
+
+// ── Trade history ──
+function renderTrades() {
+  // Build filter buttons
+  const filtersEl = document.getElementById("tradeFilters");
+  const strats = ["all", ...Object.keys(DATA.strategies)];
+  filtersEl.innerHTML = strats.map(s =>
+    `<button class="filter-btn ${activeFilter === s ? 'active' : ''}" onclick="setFilter('${s}')">${s === 'all' ? 'All' : s.replace(/_/g,' ')}</button>`
+  ).join("");
+
+  const tbody = document.getElementById("tradeBody");
+  const trades = DATA.trades.filter(t => activeFilter === "all" || t.strategy === activeFilter);
+  tbody.innerHTML = trades.slice().reverse().map(t => {
+    const dt = new Date(t.timestamp);
+    const timeStr = dt.toLocaleDateString("en-US", {month:"short",day:"numeric"}) + " " + dt.toLocaleTimeString("en-US", {hour:"2-digit",minute:"2-digit"});
+    const legsStr = t.legs.map(l => `${l.action} ${l.quantity} ${l.symbol}${l.strike ? " "+l.strike+l.right : ""}`).join(", ");
+    const pnlStr = t.pnl != null ? ((t.pnl >= 0 ? "+" : "") + "$" + fmtNum(Math.abs(t.pnl))) : "—";
+    const pnlClass = t.pnl != null ? (t.pnl >= 0 ? "positive" : "negative") : "";
+    const statusClass = t.status === "executed" ? "badge-exec" : t.status === "pending" ? "badge-pending" : "badge-rejected";
+    return `<tr>
+      <td style="white-space:nowrap">${timeStr}</td>
+      <td>${t.strategy.replace(/_/g," ")}</td>
+      <td>${t.action}</td>
+      <td style="font-size:11px">${legsStr}</td>
+      <td class="${pnlClass}">${pnlStr}</td>
+      <td><span class="badge ${statusClass}">${t.status}</span></td>
+    </tr>`;
+  }).join("");
+}
+
+function setFilter(f) { activeFilter = f; renderTrades(); }
+
+// ── Events calendar ──
+function renderEvents() {
+  const today = new Date().toISOString().slice(0, 10);
+  const upcoming = EVENTS.filter(e => e[0] >= today).slice(0, 10);
+  const list = document.getElementById("eventList");
+  list.innerHTML = upcoming.map(([date, type]) => {
+    const d = new Date(date + "T12:00:00");
+    const dateStr = d.toLocaleDateString("en-US", {weekday:"short", month:"short", day:"numeric"});
+    const typeClass = "event-" + type.toLowerCase();
+    return `<li class="event-item">
+      <span class="event-date">${dateStr}</span>
+      <span class="event-type ${typeClass}">${type}</span>
+      <span>${type === "FOMC" ? "Fed Rate Decision" : type === "CPI" ? "Consumer Price Index" : "Nonfarm Payrolls"}</span>
+    </li>`;
+  }).join("");
+}
+
+// ── Alert log ──
+function renderAlerts() {
+  const log = document.getElementById("alertLog");
+  log.innerHTML = DATA.alerts.slice().reverse().map(a => {
+    const dt = new Date(a.timestamp);
+    const time = dt.toLocaleTimeString("en-US", {hour:"2-digit", minute:"2-digit"});
+    const levelClass = "level-" + a.level;
+    return `<div class="alert-item">
+      <span class="alert-time">${time}</span>
+      <span class="alert-level ${levelClass}">${a.level.replace(/_/g," ")}</span>
+      <span class="alert-msg">${a.message}</span>
+    </div>`;
+  }).join("");
+}
+
+// ── Approval toggle ──
+document.getElementById("approvalToggle").addEventListener("change", e => {
+  if (DATA) DATA.approval_mode = e.target.checked;
+});
+
+// ── Helpers ──
+function fmtNum(n) { return Number(n).toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2}); }
+
+// ── Init ──
+loadData();
+setInterval(loadData, 30000);
+window.addEventListener("resize", () => { if (DATA) renderChart(); });
+</script>
+</body>
+</html>

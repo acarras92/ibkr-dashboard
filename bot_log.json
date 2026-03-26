@@ -1,19 +1,19 @@
 {
-  "updated_at": "2026-03-26T18:03:59.432347+00:00",
+  "updated_at": "2026-03-26T18:04:30.655328+00:00",
   "account": {
-    "net_liquidation": 1000848.31,
-    "total_cash": 1000016.64,
-    "unrealized_pnl": -23.76,
-    "realized_pnl": 94.93
+    "net_liquidation": 1000000.0,
+    "total_cash": 0.0,
+    "unrealized_pnl": 0.0,
+    "realized_pnl": 0.0
   },
   "global_daily_pnl": 0.0,
-  "vix_level": 27.96,
+  "vix_level": null,
   "approval_mode": false,
   "strategies": {
     "spx_0dte": {
-      "state": "positioned",
+      "state": "scanning",
       "daily_pnl": 0.0,
-      "open_positions": 1,
+      "open_positions": 0,
       "enabled": true,
       "max_daily_loss": 300.0,
       "max_position_size": 5
@@ -35,9 +35,9 @@
       "max_position_size": 3
     },
     "gamma_scalping": {
-      "state": "positioned",
+      "state": "scanning",
       "daily_pnl": 0.0,
-      "open_positions": 1,
+      "open_positions": 0,
       "enabled": true,
       "max_daily_loss": 400.0,
       "max_position_size": 5
@@ -45,16 +45,16 @@
   },
   "guardrails": {
     "portfolio_paused": false,
-    "account_high_water": 1000871.28,
+    "account_high_water": 1000000.0,
     "strategies": {
       "spx_0dte": {
         "win_rate": null,
         "trade_count": 0,
         "daily_pnl": 0.0,
-        "open_positions": 1,
+        "open_positions": 0,
         "paused_daily_loss": false,
         "current_params": {
-          "vix_threshold": 28.0,
+          "vix_threshold": 25.0,
           "spread_width": 5,
           "spx_offset": 50
         }
@@ -96,113 +96,13 @@
     }
   },
   "reconciliation": {
-    "total_fills_tracked": 2,
+    "total_fills_tracked": 0,
     "total_discrepancies": 0,
     "cumulative_drift": {},
     "paused_strategies": [],
     "drift_limit": 50.0
   },
-  "trades": [
-    {
-      "timestamp": "2026-03-26T18:02:04.406051+00:00",
-      "strategy": "spx_0dte",
-      "action": "SELL",
-      "reason": "0DTE put credit spread: sell 6495P / buy 6490P, SPX @ 6545",
-      "order_ids": [
-        13,
-        14
-      ],
-      "legs": [
-        {
-          "symbol": "SPX",
-          "action": "SELL",
-          "quantity": 1,
-          "order_type": "MKT",
-          "strike": 6495,
-          "right": "P",
-          "expiry": "20260326"
-        },
-        {
-          "symbol": "SPX",
-          "action": "BUY",
-          "quantity": 1,
-          "order_type": "MKT",
-          "strike": 6490,
-          "right": "P",
-          "expiry": "20260326"
-        }
-      ],
-      "status": "filled",
-      "ib_fill_price": 7.2,
-      "ib_commission": 0.0,
-      "ib_realized_pnl": 0.0
-    },
-    {
-      "timestamp": "2026-03-26T18:02:04.412171+00:00",
-      "strategy": "gamma_scalping",
-      "action": "BUY",
-      "reason": "Gamma scalp: buy 648 straddle, SPY @ 647.90",
-      "order_ids": [
-        15,
-        16
-      ],
-      "legs": [
-        {
-          "symbol": "SPY",
-          "action": "BUY",
-          "quantity": 1,
-          "order_type": "MKT",
-          "strike": 648,
-          "right": "C",
-          "expiry": "20260427"
-        },
-        {
-          "symbol": "SPY",
-          "action": "BUY",
-          "quantity": 1,
-          "order_type": "MKT",
-          "strike": 648,
-          "right": "P",
-          "expiry": "20260427"
-        }
-      ],
-      "status": "executed",
-      "ib_fill_price": null,
-      "ib_commission": null,
-      "ib_realized_pnl": null
-    }
-  ],
+  "trades": [],
   "pending_signals": [],
-  "alerts": [
-    {
-      "timestamp": "2026-03-26T18:02:04.406069+00:00",
-      "level": "order_placed",
-      "message": "Executed spx_0dte: 0DTE put credit spread: sell 6495P / buy 6490P, SPX @ 6545"
-    },
-    {
-      "timestamp": "2026-03-26T18:02:04.412205+00:00",
-      "level": "order_placed",
-      "message": "Executed gamma_scalping: Gamma scalp: buy 648 straddle, SPY @ 647.90"
-    },
-    {
-      "timestamp": "2026-03-26T18:02:04.617075+00:00",
-      "level": "fill",
-      "message": "Fill: SPX qty=1.0 @ $9.00 [spx_0dte]"
-    },
-    {
-      "timestamp": "2026-03-26T18:02:04.619147+00:00",
-      "level": "fill",
-      "message": "Fill: SPX qty=1.0 @ $9.00 [spx_0dte]"
-    },
-    {
-      "timestamp": "2026-03-26T18:02:04.633255+00:00",
-      "level": "fill",
-      "message": "Fill: SPX qty=1.0 @ $7.20 [spx_0dte]"
-    },
-    {
-      "timestamp": "2026-03-26T18:02:04.635350+00:00",
-      "level": "fill",
-      "message": "Fill: SPX qty=1.0 @ $7.20 [spx_0dte]"
-    }
-  ]
+  "alerts": []
 }

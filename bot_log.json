@@ -1,13 +1,13 @@
 {
-  "updated_at": "2026-03-26T18:04:30.655328+00:00",
+  "updated_at": "2026-03-26T18:05:30.670728+00:00",
   "account": {
-    "net_liquidation": 1000000.0,
-    "total_cash": 0.0,
-    "unrealized_pnl": 0.0,
-    "realized_pnl": 0.0
+    "net_liquidation": 1000838.17,
+    "total_cash": 1000016.64,
+    "unrealized_pnl": -33.91,
+    "realized_pnl": 94.93
   },
   "global_daily_pnl": 0.0,
-  "vix_level": null,
+  "vix_level": 28.12,
   "approval_mode": false,
   "strategies": {
     "spx_0dte": {
@@ -35,9 +35,9 @@
       "max_position_size": 3
     },
     "gamma_scalping": {
-      "state": "scanning",
+      "state": "positioned",
       "daily_pnl": 0.0,
-      "open_positions": 0,
+      "open_positions": 1,
       "enabled": true,
       "max_daily_loss": 400.0,
       "max_position_size": 5
@@ -45,7 +45,7 @@
   },
   "guardrails": {
     "portfolio_paused": false,
-    "account_high_water": 1000000.0,
+    "account_high_water": 1000848.31,
     "strategies": {
       "spx_0dte": {
         "win_rate": null,
@@ -102,7 +102,48 @@
     "paused_strategies": [],
     "drift_limit": 50.0
   },
-  "trades": [],
+  "trades": [
+    {
+      "timestamp": "2026-03-26T18:04:35.661686+00:00",
+      "strategy": "gamma_scalping",
+      "action": "BUY",
+      "reason": "Gamma scalp: buy 648 straddle, SPY @ 647.69",
+      "order_ids": [
+        17,
+        18
+      ],
+      "legs": [
+        {
+          "symbol": "SPY",
+          "action": "BUY",
+          "quantity": 1,
+          "order_type": "MKT",
+          "strike": 648,
+          "right": "C",
+          "expiry": "20260427"
+        },
+        {
+          "symbol": "SPY",
+          "action": "BUY",
+          "quantity": 1,
+          "order_type": "MKT",
+          "strike": 648,
+          "right": "P",
+          "expiry": "20260427"
+        }
+      ],
+      "status": "executed",
+      "ib_fill_price": null,
+      "ib_commission": null,
+      "ib_realized_pnl": null
+    }
+  ],
   "pending_signals": [],
-  "alerts": []
+  "alerts": [
+    {
+      "timestamp": "2026-03-26T18:04:35.661700+00:00",
+      "level": "order_placed",
+      "message": "Executed gamma_scalping: Gamma scalp: buy 648 straddle, SPY @ 647.69"
+    }
+  ]
 }

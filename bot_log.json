@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-03-26T20:10:31.881633+00:00",
+  "updated_at": "2026-03-26T20:11:31.889618+00:00",
   "account": {
     "net_liquidation": 1000448.72,
     "total_cash": 1000016.64,
@@ -7,7 +7,7 @@
     "realized_pnl": 94.93
   },
   "global_daily_pnl": 0.0,
-  "vix_level": 28.18,
+  "vix_level": 28.11,
   "approval_mode": false,
   "strategies": {
     "spx_0dte": {

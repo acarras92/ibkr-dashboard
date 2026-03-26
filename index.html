@@ -476,8 +476,8 @@ function renderKPIs() {
   const uEl = document.getElementById("kpiUnrealized");
   uEl.textContent = (uPnl >= 0 ? "+$" : "-$") + fmtNum(Math.abs(uPnl));
   uEl.className = "kpi-value " + (uPnl >= 0 ? "positive" : "negative");
-  const lastVixTrade = [...(DATA.trades || [])].reverse().find(t => t.strategy === "vix_mean_reversion");
-  if (lastVixTrade) { const m = lastVixTrade.reason.match(/VIX[= @]+([\d.]+)/); if (m) document.getElementById("kpiVix").textContent = parseFloat(m[1]).toFixed(1); }
+  if (DATA.vix_level != null) { document.getElementById("kpiVix").textContent = parseFloat(DATA.vix_level).toFixed(1); }
+  else { const lastVixTrade = [...(DATA.trades || [])].reverse().find(t => t.strategy === "vix_mean_reversion"); if (lastVixTrade) { const m = lastVixTrade.reason.match(/VIX[= @]+([\d.]+)/); if (m) document.getElementById("kpiVix").textContent = parseFloat(m[1]).toFixed(1); } }
 }
 
 // ── Strategy cards ──

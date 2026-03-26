@@ -1,19 +1,19 @@
 {
-  "updated_at": "2026-03-26T17:48:36.538348+00:00",
+  "updated_at": "2026-03-26T17:49:36.552128+00:00",
   "account": {
-    "net_liquidation": 1000000.0,
-    "total_cash": 0.0,
+    "net_liquidation": 1000777.15,
+    "total_cash": 1000000.0,
     "unrealized_pnl": 0.0,
     "realized_pnl": 0.0
   },
   "global_daily_pnl": 0.0,
-  "vix_level": null,
+  "vix_level": 27.63,
   "approval_mode": false,
   "strategies": {
     "spx_0dte": {
-      "state": "scanning",
+      "state": "positioned",
       "daily_pnl": 0.0,
-      "open_positions": 0,
+      "open_positions": 1,
       "enabled": true,
       "max_daily_loss": 300.0,
       "max_position_size": 5
@@ -45,7 +45,7 @@
   },
   "guardrails": {
     "portfolio_paused": false,
-    "account_high_water": 1000000.0,
+    "account_high_water": 1000777.15,
     "strategies": {
       "spx_0dte": {
         "win_rate": null,
@@ -102,7 +102,48 @@
     "paused_strategies": [],
     "drift_limit": 50.0
   },
-  "trades": [],
+  "trades": [
+    {
+      "timestamp": "2026-03-26T17:48:41.543639+00:00",
+      "strategy": "spx_0dte",
+      "action": "SELL",
+      "reason": "0DTE put credit spread: sell 6510P / buy 6505P, SPX @ 6560",
+      "order_ids": [
+        1,
+        2
+      ],
+      "legs": [
+        {
+          "symbol": "SPX",
+          "action": "SELL",
+          "quantity": 1,
+          "order_type": "MKT",
+          "strike": 6510,
+          "right": "P",
+          "expiry": "20260326"
+        },
+        {
+          "symbol": "SPX",
+          "action": "BUY",
+          "quantity": 1,
+          "order_type": "MKT",
+          "strike": 6505,
+          "right": "P",
+          "expiry": "20260326"
+        }
+      ],
+      "status": "executed",
+      "ib_fill_price": null,
+      "ib_commission": null,
+      "ib_realized_pnl": null
+    }
+  ],
   "pending_signals": [],
-  "alerts": []
+  "alerts": [
+    {
+      "timestamp": "2026-03-26T17:48:41.543675+00:00",
+      "level": "order_placed",
+      "message": "Executed spx_0dte: 0DTE put credit spread: sell 6510P / buy 6505P, SPX @ 6560"
+    }
+  ]
 }

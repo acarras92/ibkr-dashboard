@@ -1,13 +1,13 @@
 {
-  "updated_at": "2026-03-27T13:37:55.933381+00:00",
+  "updated_at": "2026-03-27T13:38:45.163063+00:00",
   "account": {
-    "net_liquidation": 1000633.17,
-    "total_cash": 999516.64,
-    "unrealized_pnl": -1.89,
+    "net_liquidation": 1000000.0,
+    "total_cash": 0.0,
+    "unrealized_pnl": 0.0,
     "realized_pnl": 0.0
   },
   "global_daily_pnl": 0.0,
-  "vix_level": 29.73,
+  "vix_level": null,
   "approval_mode": false,
   "strategies": {
     "spx_0dte": {
@@ -35,9 +35,9 @@
       "max_position_size": 3
     },
     "gamma_scalping": {
-      "state": "positioned",
+      "state": "scanning",
       "daily_pnl": 0.0,
-      "open_positions": 1,
+      "open_positions": 0,
       "enabled": true,
       "max_daily_loss": 400.0,
       "max_position_size": 5
@@ -45,7 +45,7 @@
   },
   "guardrails": {
     "portfolio_paused": false,
-    "account_high_water": 1000868.07,
+    "account_high_water": 1000000.0,
     "strategies": {
       "spx_0dte": {
         "win_rate": null,
@@ -54,9 +54,9 @@
         "open_positions": 0,
         "paused_daily_loss": false,
         "current_params": {
-          "vix_threshold": 25.0,
-          "spread_width": 5,
-          "spx_offset": 50
+          "vrp_threshold": 3.0,
+          "short_put_target_delta": 0.1,
+          "spread_width": 5
         }
       },
       "vix_mean_reversion": {
@@ -66,8 +66,9 @@
         "open_positions": 0,
         "paused_daily_loss": false,
         "current_params": {
-          "vix_spike_threshold": 25.0,
-          "rsi_overbought": 70
+          "daily_roll_entry": 0.1,
+          "daily_roll_exit": 0.05,
+          "rsi_entry": 65
         }
       },
       "event_vol_selling": {
@@ -77,6 +78,7 @@
         "open_positions": 0,
         "paused_daily_loss": false,
         "current_params": {
+          "vrp_threshold": 3.0,
           "ic_put_offset": 75,
           "ic_call_offset": 75,
           "ic_wing_width": 25
@@ -89,6 +91,7 @@
         "open_positions": 0,
         "paused_daily_loss": false,
         "current_params": {
+          "iv_rv_spread_threshold": 2.0,
           "delta_hedge_threshold": 10,
           "straddle_dte": 30
         }
@@ -102,48 +105,8 @@
     "paused_strategies": [],
     "drift_limit": 50.0
   },
-  "trades": [
-    {
-      "timestamp": "2026-03-26T18:04:35.661686+00:00",
-      "strategy": "gamma_scalping",
-      "action": "BUY",
-      "reason": "Gamma scalp: buy 648 straddle, SPY @ 647.69",
-      "order_ids": [
-        17,
-        18
-      ],
-      "legs": [
-        {
-          "symbol": "SPY",
-          "action": "BUY",
-          "quantity": 1,
-          "order_type": "MKT",
-          "strike": 648,
-          "right": "C",
-          "expiry": "20260427"
-        },
-        {
-          "symbol": "SPY",
-          "action": "BUY",
-          "quantity": 1,
-          "order_type": "MKT",
-          "strike": 648,
-          "right": "P",
-          "expiry": "20260427"
-        }
-      ],
-      "status": "executed",
-      "ib_fill_price": null,
-      "ib_commission": null,
-      "ib_realized_pnl": null
-    }
-  ],
+  "quant_metrics": {},
+  "trades": [],
   "pending_signals": [],
-  "alerts": [
-    {
-      "timestamp": "2026-03-26T18:04:35.661700+00:00",
-      "level": "order_placed",
-      "message": "Executed gamma_scalping: Gamma scalp: buy 648 straddle, SPY @ 647.69"
-    }
-  ]
+  "alerts": []
 }

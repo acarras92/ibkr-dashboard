@@ -1,13 +1,13 @@
 {
-  "updated_at": "2026-03-27T14:01:51.912953+00:00",
+  "updated_at": "2026-03-27T14:02:52.380442+00:00",
   "account": {
-    "net_liquidation": 1000000.0,
-    "total_cash": 0.0,
-    "unrealized_pnl": 0.0,
+    "net_liquidation": 1000634.82,
+    "total_cash": 999516.64,
+    "unrealized_pnl": -0.24,
     "realized_pnl": 0.0
   },
   "global_daily_pnl": 0.0,
-  "vix_level": null,
+  "vix_level": 29.3,
   "approval_mode": false,
   "strategies": {
     "spx_0dte": {
@@ -45,7 +45,7 @@
   },
   "guardrails": {
     "portfolio_paused": false,
-    "account_high_water": 1000000.0,
+    "account_high_water": 1000635.31,
     "strategies": {
       "spx_0dte": {
         "win_rate": null,
@@ -105,7 +105,15 @@
     "paused_strategies": [],
     "drift_limit": 50.0
   },
-  "quant_metrics": {},
+  "quant_metrics": {
+    "vix_mean_reversion": {
+      "vix_basis": -1.85,
+      "daily_roll": -0.1423
+    },
+    "gamma_scalping": {
+      "rv": 0.39
+    }
+  },
   "trades": [],
   "pending_signals": [],
   "alerts": []

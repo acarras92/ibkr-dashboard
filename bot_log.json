@@ -1,9 +1,9 @@
 {
-  "updated_at": "2026-03-27T19:47:57.290605+00:00",
+  "updated_at": "2026-03-27T19:48:57.298232+00:00",
   "account": {
-    "net_liquidation": 1000325.12,
+    "net_liquidation": 1000319.16,
     "total_cash": 999573.36,
-    "unrealized_pnl": -309.94,
+    "unrealized_pnl": -315.9,
     "realized_pnl": 0.0
   },
   "global_daily_pnl": 0.0,

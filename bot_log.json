@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-03-27T13:42:57.371658+00:00",
+  "updated_at": "2026-03-27T13:43:57.894013+00:00",
   "account": {
     "net_liquidation": 1000634.31,
     "total_cash": 999516.64,
@@ -107,7 +107,7 @@
   },
   "quant_metrics": {
     "gamma_scalping": {
-      "rv": 0.22
+      "rv": 0.04
     }
   },
   "trades": [],

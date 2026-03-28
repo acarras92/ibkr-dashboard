@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-03-27T23:59:01.286511+00:00",
+  "updated_at": "2026-03-28T00:00:01.294761+00:00",
   "account": {
     "net_liquidation": 1000569.17,
     "total_cash": 999458.37,
@@ -99,7 +99,7 @@
     }
   },
   "reconciliation": {
-    "total_fills_tracked": 2,
+    "total_fills_tracked": 0,
     "total_discrepancies": 0,
     "cumulative_drift": {},
     "paused_strategies": [],

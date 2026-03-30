@@ -59,7 +59,7 @@ a{color:var(--accent);text-decoration:none}
 .card-body{padding:16px}
 
 /* Strategy Cards */
-.strat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.strat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:20px}
 .strat-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px}
 .strat-name{font-size:13px;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:8px}
 .strat-tag{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:500;text-transform:uppercase}
@@ -161,7 +161,7 @@ tr.recon-discrepancy td{background:rgba(245,158,11,.05)}
 .debug-section{font-size:11px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px;padding:8px 0 4px;margin-top:8px;border-bottom:1px solid var(--border)}
 
 /* Responsive */
-@media(max-width:1200px){.strat-grid{grid-template-columns:repeat(2,1fr)}.kpi-row{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:1200px){.kpi-row{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:768px){.kpi-row,.strat-grid{grid-template-columns:1fr}.grid-2,.grid-3-1{grid-template-columns:1fr}}
 
 /* Scrollbar */
@@ -308,8 +308,8 @@ tr.recon-discrepancy td{background:rgba(245,158,11,.05)}
 <script>
 // ── Economic calendar (mirrors event_vol_selling.py) ──
 const EVENTS=[["2026-01-28","FOMC"],["2026-03-18","FOMC"],["2026-05-06","FOMC"],["2026-06-17","FOMC"],["2026-07-29","FOMC"],["2026-09-16","FOMC"],["2026-11-04","FOMC"],["2026-12-16","FOMC"],["2026-01-14","CPI"],["2026-02-11","CPI"],["2026-03-11","CPI"],["2026-04-14","CPI"],["2026-05-12","CPI"],["2026-06-10","CPI"],["2026-07-14","CPI"],["2026-08-12","CPI"],["2026-09-15","CPI"],["2026-10-13","CPI"],["2026-11-10","CPI"],["2026-12-10","CPI"],["2026-01-09","NFP"],["2026-02-06","NFP"],["2026-03-06","NFP"],["2026-04-03","NFP"],["2026-05-08","NFP"],["2026-06-05","NFP"],["2026-07-02","NFP"],["2026-08-07","NFP"],["2026-09-04","NFP"],["2026-10-02","NFP"],["2026-11-06","NFP"],["2026-12-04","NFP"]];
-const STRAT_DISPLAY={spx_0dte:{label:"SPX 0DTE Credit Spreads",desc:"Put credit spreads ~50pts below SPX",color:"var(--accent)"},vix_mean_reversion:{label:"VIX Mean Reversion",desc:"Sell VIX call spreads on spikes (>25 + RSI>70)",color:"var(--purple)"},event_vol_selling:{label:"Event Vol Selling",desc:"Iron condors day before FOMC/CPI/NFP",color:"var(--amber)"},gamma_scalping:{label:"Gamma Scalping",desc:"ATM SPY straddles + delta hedging",color:"var(--cyan)"}};
-const DEFAULT_PARAMS={spx_0dte:{vix_threshold:25,spread_width:5,spx_offset:50},vix_mean_reversion:{vix_spike_threshold:25,rsi_overbought:70},event_vol_selling:{ic_put_offset:75,ic_call_offset:75,ic_wing_width:25},gamma_scalping:{delta_hedge_threshold:10,straddle_dte:30}};
+const STRAT_DISPLAY={spx_0dte:{label:"SPX 0DTE Credit Spreads",desc:"Delta-based put spreads, VRP filtered",color:"var(--accent)"},vix_mean_reversion:{label:"VIX Mean Reversion",desc:"VIX call spreads on futures basis + RSI",color:"var(--purple)"},event_vol_selling:{label:"Event Vol Selling",desc:"Iron condors day before FOMC/CPI/NFP, VRP filtered",color:"var(--amber)"},gamma_scalping:{label:"Gamma Scalping",desc:"ATM SPY straddles + delta hedging, IV-RV gated",color:"var(--cyan)"},vrp_put_spread:{label:"VRP Put Spreads",desc:"30-45 DTE SPX put credit spreads, CBOE PUT confirmed",color:"var(--green)"},mes_trend_following:{label:"MES Trend Following",desc:"EMA crossover hedge, 2x ATR trailing stop",color:"var(--red)"},spx_calendar_spread:{label:"SPX Calendar Spreads",desc:"Front-week / back-month ATM calls, IV rank gated",color:"#f472b6"}};
+const DEFAULT_PARAMS={spx_0dte:{vrp_threshold:3.0,short_put_target_delta:0.10,spread_width:5},vix_mean_reversion:{daily_roll_entry:0.10,daily_roll_exit:0.05,rsi_entry:65},event_vol_selling:{vrp_threshold:3.0,ic_put_offset:75,ic_call_offset:75,ic_wing_width:25},gamma_scalping:{iv_rv_spread_threshold:2.0,delta_hedge_threshold:10,straddle_dte:30},vrp_put_spread:{vrp_threshold:3.0,max_positions:2,profit_target:0.50,time_exit_dte:21},mes_trend_following:{ema_fast:20,ema_slow:50,atr_multiplier:2.0,atr_period:14},spx_calendar_spread:{iv_rank_entry:30,profit_target:0.40,front_exit_dte:3}};
 
 let DATA = null;
 let HEALTH_DATA = null;
@@ -509,7 +509,26 @@ function renderStrategies() {
     let pauseRow = "";
     if (portfolioPaused) pauseRow = `<div class="strat-row"><span>Pause reason</span><span class="negative">Portfolio drawdown</span></div>`;
     else if (isPausedLoss) pauseRow = `<div class="strat-row"><span>Pause reason</span><span class="negative">Daily loss limit</span></div>`;
-    grid.innerHTML += `<div class="strat-card" style="border-top:2px solid ${isPaused ? 'var(--red)' : info.color}"><div class="strat-name">${info.label} <span class="strat-tag ${tagClass}">${tagLabel}</span></div><div style="font-size:11px;color:var(--text-dim);margin-bottom:10px">${info.desc}</div><div class="strat-row"><span>Daily P&L</span><span class="${pnlClass}">${strat.daily_pnl >= 0 ? "+" : ""}$${fmtNum(Math.abs(strat.daily_pnl))}</span></div><div class="strat-row"><span>Open Positions</span><span>${strat.open_positions} / ${strat.max_position_size}</span></div><div class="strat-row"><span>Max Daily Loss</span><span>$${fmtNum(strat.max_daily_loss)}</span></div><div class="strat-row"><span>Enabled</span><span>${strat.enabled ? "\u2713" : "\u2717"}</span></div><hr class="strat-divider"><div class="strat-row"><span>Win Rate (${tradeCount} trades)</span><span>${winRateStr}</span></div>${paramRows}${pauseRow}</div>`;
+    // Quantitative metrics from quant_metrics
+    const qm = (DATA.quant_metrics || {})[key] || {};
+    let quantRows = "";
+    if (qm.vrp != null) quantRows += `<div class="strat-row"><span>VRP</span><span>${qm.vrp.toFixed(1)}%</span></div>`;
+    if (qm.delta_at_entry != null) quantRows += `<div class="strat-row"><span>Delta at Entry</span><span>${qm.delta_at_entry.toFixed(3)}</span></div>`;
+    if (qm.vix_basis != null) quantRows += `<div class="strat-row"><span>VIX Basis</span><span>${qm.vix_basis.toFixed(2)}</span></div>`;
+    if (qm.daily_roll != null) quantRows += `<div class="strat-row"><span>Daily Roll</span><span>${qm.daily_roll.toFixed(3)}</span></div>`;
+    if (qm.iv_rv_spread != null) quantRows += `<div class="strat-row"><span>IV-RV Spread</span><span>${qm.iv_rv_spread.toFixed(1)}%</span></div>`;
+    if (qm.iv != null) quantRows += `<div class="strat-row"><span>IV</span><span>${qm.iv.toFixed(1)}%</span></div>`;
+    if (qm.rv != null) quantRows += `<div class="strat-row"><span>RV</span><span>${qm.rv.toFixed(1)}%</span></div>`;
+    if (qm.cboe_put_signal != null) quantRows += `<div class="strat-row"><span>CBOE PUT Signal</span><span>${qm.cboe_put_signal}</span></div>`;
+    if (qm.ema_20 != null) quantRows += `<div class="strat-row"><span>EMA 20</span><span>${qm.ema_20.toFixed(1)}</span></div>`;
+    if (qm.ema_50 != null) quantRows += `<div class="strat-row"><span>EMA 50</span><span>${qm.ema_50.toFixed(1)}</span></div>`;
+    if (qm.atr != null) quantRows += `<div class="strat-row"><span>ATR</span><span>${qm.atr.toFixed(2)}</span></div>`;
+    if (qm.trailing_stop != null) quantRows += `<div class="strat-row"><span>Trailing Stop</span><span>${qm.trailing_stop.toFixed(1)}</span></div>`;
+    if (qm.iv_rank != null) quantRows += `<div class="strat-row"><span>IV Rank</span><span>${qm.iv_rank.toFixed(1)}</span></div>`;
+    if (qm.front_iv != null) quantRows += `<div class="strat-row"><span>Front IV</span><span>${qm.front_iv.toFixed(1)}%</span></div>`;
+    if (qm.back_iv != null) quantRows += `<div class="strat-row"><span>Back IV</span><span>${qm.back_iv.toFixed(1)}%</span></div>`;
+    const quantSection = quantRows ? `<hr class="strat-divider">${quantRows}` : "";
+    grid.innerHTML += `<div class="strat-card" style="border-top:2px solid ${isPaused ? 'var(--red)' : info.color}"><div class="strat-name">${info.label} <span class="strat-tag ${tagClass}">${tagLabel}</span></div><div style="font-size:11px;color:var(--text-dim);margin-bottom:10px">${info.desc}</div><div class="strat-row"><span>Daily P&L</span><span class="${pnlClass}">${strat.daily_pnl >= 0 ? "+" : ""}$${fmtNum(Math.abs(strat.daily_pnl))}</span></div><div class="strat-row"><span>Open Positions</span><span>${strat.open_positions} / ${strat.max_position_size}</span></div><div class="strat-row"><span>Max Daily Loss</span><span>$${fmtNum(strat.max_daily_loss)}</span></div><div class="strat-row"><span>Enabled</span><span>${strat.enabled ? "\u2713" : "\u2717"}</span></div><hr class="strat-divider"><div class="strat-row"><span>Win Rate (${tradeCount} trades)</span><span>${winRateStr}</span></div>${paramRows}${quantSection}${pauseRow}</div>`;
   }
 }
 

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-03-30T23:30:40.443624+00:00",
+  "updated_at": "2026-03-30T23:31:40.452532+00:00",
   "account": {
     "net_liquidation": 1000375.52,
     "total_cash": 1001018.52,
@@ -171,8 +171,8 @@
       "delta_at_entry": 0.1
     },
     "vix_mean_reversion": {
-      "vix_basis": -2.01,
-      "daily_roll": -0.1675
+      "vix_basis": -2.06,
+      "daily_roll": -0.1717
     },
     "gamma_scalping": {
       "rv": 0.05

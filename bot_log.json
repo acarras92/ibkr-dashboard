@@ -1,9 +1,9 @@
 {
-  "updated_at": "2026-03-31T03:19:42.671234+00:00",
+  "updated_at": "2026-03-31T03:20:42.683333+00:00",
   "account": {
-    "net_liquidation": 1000633.57,
-    "total_cash": 1001018.52,
-    "unrealized_pnl": -126.28,
+    "net_liquidation": 1000852.49,
+    "total_cash": 1001018.51,
+    "unrealized_pnl": -166.28,
     "realized_pnl": 0.0
   },
   "global_daily_pnl": 0.0,
@@ -69,7 +69,7 @@
   },
   "guardrails": {
     "portfolio_paused": false,
-    "account_high_water": 1000693.57,
+    "account_high_water": 1000852.49,
     "strategies": {
       "spx_0dte": {
         "win_rate": null,

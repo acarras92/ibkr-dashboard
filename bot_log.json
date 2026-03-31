@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-03-31T08:06:45.491617+00:00",
+  "updated_at": "2026-03-31T08:07:45.499731+00:00",
   "account": {
     "net_liquidation": 1000935.59,
     "total_cash": 1001018.51,
@@ -7,7 +7,7 @@
     "realized_pnl": 0.0
   },
   "global_daily_pnl": 0.0,
-  "vix_level": 29.04,
+  "vix_level": 29.0,
   "approval_mode": false,
   "strategies": {
     "spx_0dte": {
@@ -171,8 +171,8 @@
       "delta_at_entry": 0.1
     },
     "vix_mean_reversion": {
-      "vix_basis": -2.14,
-      "daily_roll": -0.1945
+      "vix_basis": -2.15,
+      "daily_roll": -0.1955
     },
     "gamma_scalping": {
       "rv": 0.05

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-03-31T07:43:45.264989+00:00",
+  "updated_at": "2026-03-31T07:45:45.285359+00:00",
   "account": {
     "net_liquidation": 1000655.49,
     "total_cash": 999458.36,
@@ -182,7 +182,7 @@
       "message": "Fill: SPX qty=1.0 @ $6.50 [spx_0dte]"
     }
   ]
-}ades": [
+}": [
     {
       "timestamp": "2026-03-30T14:01:48.450902+00:00",
       "strategy": "spx_0dte",

@@ -1,9 +1,9 @@
 {
-  "updated_at": "2026-04-06T23:56:13.427018+00:00",
+  "updated_at": "2026-04-07T00:01:13.484774+00:00",
   "account": {
-    "net_liquidation": 988418.78,
-    "total_cash": 979219.05,
-    "unrealized_pnl": -12915.0,
+    "net_liquidation": 988404.72,
+    "total_cash": 979205.03,
+    "unrealized_pnl": -12929.06,
     "realized_pnl": 0.0
   },
   "global_daily_pnl": 0.0,
@@ -161,7 +161,7 @@
     }
   },
   "reconciliation": {
-    "total_fills_tracked": 4,
+    "total_fills_tracked": 0,
     "total_discrepancies": 0,
     "cumulative_drift": {},
     "paused_strategies": [],

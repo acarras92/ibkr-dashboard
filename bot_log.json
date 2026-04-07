@@ -1,13 +1,13 @@
 {
-  "updated_at": "2026-04-07T18:30:24.986158+00:00",
+  "updated_at": "2026-04-07T18:35:25.044240+00:00",
   "account": {
-    "net_liquidation": 991565.59,
-    "total_cash": 979957.98,
-    "unrealized_pnl": -10121.28,
+    "net_liquidation": 991623.56,
+    "total_cash": 979954.99,
+    "unrealized_pnl": -10063.3,
     "realized_pnl": 0.0
   },
   "global_daily_pnl": 0.0,
-  "vix_level": 26.62,
+  "vix_level": 26.5,
   "approval_mode": false,
   "strategies": {
     "spx_0dte": {
@@ -193,8 +193,8 @@
       "delta_at_entry": 0.1
     },
     "vix_mean_reversion": {
-      "vix_basis": -1.27,
-      "daily_roll": -0.2117
+      "vix_basis": -1.0,
+      "daily_roll": -0.1667
     },
     "gamma_scalping": {
       "rv": 0.11
@@ -203,9 +203,9 @@
       "vrp": 25.72
     },
     "mes_trend_following": {
-      "ema_fast": 6625.93,
-      "ema_slow": 6615.37,
-      "atr": 6.77
+      "ema_fast": 6625.82,
+      "ema_slow": 6615.74,
+      "atr": 6.86
     }
   },
   "trades": [

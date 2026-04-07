@@ -1,9 +1,9 @@
 {
-  "updated_at": "2026-04-07T01:26:15.083852+00:00",
+  "updated_at": "2026-04-07T01:31:15.192390+00:00",
   "account": {
-    "net_liquidation": 989437.29,
-    "total_cash": 979165.37,
-    "unrealized_pnl": -11896.49,
+    "net_liquidation": 989356.46,
+    "total_cash": 979174.54,
+    "unrealized_pnl": -11977.32,
     "realized_pnl": 0.0
   },
   "global_daily_pnl": 0.0,
@@ -193,8 +193,8 @@
       "delta_at_entry": 0.1
     },
     "vix_mean_reversion": {
-      "vix_basis": -0.02,
-      "daily_roll": -0.0029
+      "vix_basis": -0.07,
+      "daily_roll": -0.01
     },
     "gamma_scalping": {
       "rv": 0.14

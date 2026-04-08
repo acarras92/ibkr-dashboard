@@ -1,9 +1,9 @@
 {
-  "updated_at": "2026-04-08T14:10:28.873096+00:00",
+  "updated_at": "2026-04-08T14:15:28.930659+00:00",
   "account": {
-    "net_liquidation": 993205.15,
-    "total_cash": 976523.39,
-    "unrealized_pnl": -8594.53,
+    "net_liquidation": 993019.46,
+    "total_cash": 976547.14,
+    "unrealized_pnl": -8780.23,
     "realized_pnl": 0.0
   },
   "global_daily_pnl": 0.0,
@@ -19,9 +19,9 @@
       "max_position_size": 5
     },
     "vix_mean_reversion": {
-      "state": "positioned",
+      "state": "scanning",
       "daily_pnl": 0.0,
-      "open_positions": 1,
+      "open_positions": 0,
       "enabled": true,
       "max_daily_loss": 400.0,
       "max_position_size": 5
@@ -193,8 +193,8 @@
       "delta_at_entry": 0.1
     },
     "vix_mean_reversion": {
-      "vix_basis": 0.91,
-      "daily_roll": 0.182
+      "vix_basis": 0.76,
+      "daily_roll": 0.152
     },
     "gamma_scalping": {
       "rv": 0.01

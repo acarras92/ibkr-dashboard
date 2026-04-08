@@ -1,13 +1,13 @@
 {
-  "updated_at": "2026-04-08T19:05:32.187228+00:00",
+  "updated_at": "2026-04-08T19:10:32.243464+00:00",
   "account": {
-    "net_liquidation": 995011.78,
-    "total_cash": 976457.14,
-    "unrealized_pnl": -6787.91,
-    "realized_pnl": 0.0
+    "net_liquidation": 994659.15,
+    "total_cash": 976481.52,
+    "unrealized_pnl": -8703.05,
+    "realized_pnl": 1562.51
   },
   "global_daily_pnl": 0.0,
-  "vix_level": 21.75,
+  "vix_level": 21.72,
   "approval_mode": false,
   "strategies": {
     "spx_0dte": {
@@ -59,9 +59,9 @@
       "max_position_size": 5
     },
     "mes_trend_following": {
-      "state": "scanning",
+      "state": "positioned",
       "daily_pnl": 0.0,
-      "open_positions": 0,
+      "open_positions": 1,
       "enabled": true,
       "max_daily_loss": 400.0,
       "max_position_size": 1
@@ -138,7 +138,7 @@
         "win_rate": null,
         "trade_count": 0,
         "daily_pnl": 0.0,
-        "open_positions": 0,
+        "open_positions": 1,
         "paused_daily_loss": false,
         "current_params": {
           "ema_fast_period": 20,
@@ -161,7 +161,7 @@
     }
   },
   "reconciliation": {
-    "total_fills_tracked": 4,
+    "total_fills_tracked": 5,
     "total_discrepancies": 0,
     "cumulative_drift": {},
     "paused_strategies": [],
@@ -193,8 +193,8 @@
       "delta_at_entry": 0.1
     },
     "vix_mean_reversion": {
-      "vix_basis": 0.45,
-      "daily_roll": 0.09
+      "vix_basis": 0.73,
+      "daily_roll": 0.146
     },
     "gamma_scalping": {
       "rv": 0.01
@@ -203,9 +203,11 @@
       "vrp": 20.01
     },
     "mes_trend_following": {
-      "ema_fast": 6814.52,
-      "ema_slow": 6814.09,
-      "atr": 5.8
+      "ema_fast": 6812.57,
+      "ema_slow": 6813.31,
+      "atr": 6.13,
+      "position_direction": "SHORT",
+      "stop_price": 6806.26
     }
   },
   "trades": [
@@ -480,6 +482,30 @@
       "ib_fill_price": null,
       "ib_commission": null,
       "ib_realized_pnl": null
+    },
+    {
+      "timestamp": "2026-04-08T19:10:12.238176+00:00",
+      "strategy": "mes_trend_following",
+      "action": "SELL",
+      "reason": "EMA crossover entry: SHORT MES @ 6794.00, EMA20=6812.57 / EMA50=6813.31, ATR=6.13, stop=6806.26",
+      "order_ids": [
+        55
+      ],
+      "legs": [
+        {
+          "symbol": "MES",
+          "action": "SELL",
+          "quantity": 1,
+          "order_type": "MKT",
+          "strike": 0.0,
+          "right": "",
+          "expiry": "202606"
+        }
+      ],
+      "status": "filled",
+      "ib_fill_price": 6802.75,
+      "ib_commission": 0.0,
+      "ib_realized_pnl": 0.0
     }
   ],
   "pending_signals": [],
@@ -563,6 +589,21 @@
       "timestamp": "2026-04-08T18:34:46.856641+00:00",
       "level": "order_placed",
       "message": "Executed vix_mean_reversion: VIX mean reversion: sell 21.5C/24.0C, VIX=21.3 roll=0.102 RSI=65.1"
+    },
+    {
+      "timestamp": "2026-04-08T19:10:12.238197+00:00",
+      "level": "order_placed",
+      "message": "Executed mes_trend_following: EMA crossover entry: SHORT MES @ 6794.00, EMA20=6812.57 / EMA50=6813.31, ATR=6.13, stop=6806.26"
+    },
+    {
+      "timestamp": "2026-04-08T19:10:12.417051+00:00",
+      "level": "fill",
+      "message": "Fill: MES qty=1.0 @ $6802.75 [mes_trend_following]"
+    },
+    {
+      "timestamp": "2026-04-08T19:10:12.420384+00:00",
+      "level": "fill",
+      "message": "Fill: MES qty=1.0 @ $6802.75 [mes_trend_following]"
     }
   ]
 }

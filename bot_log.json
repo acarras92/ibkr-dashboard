@@ -1,13 +1,13 @@
 {
-  "updated_at": "2026-04-08T12:25:04.430160+00:00",
+  "updated_at": "2026-04-08T12:30:04.481390+00:00",
   "account": {
-    "net_liquidation": 1000000.0,
-    "total_cash": 0.0,
-    "unrealized_pnl": 0.0,
+    "net_liquidation": 993325.84,
+    "total_cash": 994582.45,
+    "unrealized_pnl": -8473.85,
     "realized_pnl": 0.0
   },
   "global_daily_pnl": 0.0,
-  "vix_level": null,
+  "vix_level": 20.25,
   "approval_mode": false,
   "strategies": {
     "spx_0dte": {
@@ -170,12 +170,12 @@
   "macro_overlay": {
     "quad": 1,
     "growth_roc": null,
-    "inflation_proxy": null,
+    "inflation_proxy": 0.1,
     "growth_trend": "unknown",
-    "inflation_trend": "unknown",
+    "inflation_trend": "accelerating",
     "confidence": "low",
-    "updated_at": "2026-04-08T12:25:04.417619+00:00",
-    "data_source": "cold_start_default",
+    "updated_at": "2026-04-08T12:25:09.434917+00:00",
+    "data_source": "vx_slope",
     "enabled": true,
     "vrp_multiplier": 1.0,
     "favored_strategies": [
@@ -185,9 +185,14 @@
     ],
     "disabled_strategies": [],
     "short_vol_cap": 6,
-    "spx_data_points": 0
+    "spx_data_points": 1
   },
-  "quant_metrics": {},
+  "quant_metrics": {
+    "vix_mean_reversion": {
+      "vix_basis": 1.6,
+      "daily_roll": 0.32
+    }
+  },
   "trades": [],
   "pending_signals": [],
   "alerts": []

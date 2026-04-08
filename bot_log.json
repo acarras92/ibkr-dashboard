@@ -1,13 +1,13 @@
 {
-  "updated_at": "2026-04-08T12:30:04.481390+00:00",
+  "updated_at": "2026-04-08T12:35:04.532328+00:00",
   "account": {
-    "net_liquidation": 993325.84,
-    "total_cash": 994582.45,
-    "unrealized_pnl": -8473.85,
+    "net_liquidation": 993335.71,
+    "total_cash": 994602.3,
+    "unrealized_pnl": -8463.98,
     "realized_pnl": 0.0
   },
   "global_daily_pnl": 0.0,
-  "vix_level": 20.25,
+  "vix_level": 20.45,
   "approval_mode": false,
   "strategies": {
     "spx_0dte": {
@@ -19,9 +19,9 @@
       "max_position_size": 5
     },
     "vix_mean_reversion": {
-      "state": "scanning",
+      "state": "positioned",
       "daily_pnl": 0.0,
-      "open_positions": 0,
+      "open_positions": 1,
       "enabled": true,
       "max_daily_loss": 400.0,
       "max_position_size": 5
@@ -189,11 +189,52 @@
   },
   "quant_metrics": {
     "vix_mean_reversion": {
-      "vix_basis": 1.6,
-      "daily_roll": 0.32
+      "vix_basis": 1.95,
+      "daily_roll": 0.39
     }
   },
-  "trades": [],
+  "trades": [
+    {
+      "timestamp": "2026-04-08T12:34:49.527243+00:00",
+      "strategy": "vix_mean_reversion",
+      "action": "SELL",
+      "reason": "VIX mean reversion: sell 20.5C/23.0C, VIX=20.4 roll=0.392 RSI=73.2",
+      "order_ids": [
+        39,
+        40
+      ],
+      "legs": [
+        {
+          "symbol": "VIX",
+          "action": "SELL",
+          "quantity": 1,
+          "order_type": "MKT",
+          "strike": 20.5,
+          "right": "C",
+          "expiry": "20260508"
+        },
+        {
+          "symbol": "VIX",
+          "action": "BUY",
+          "quantity": 1,
+          "order_type": "MKT",
+          "strike": 23.0,
+          "right": "C",
+          "expiry": "20260508"
+        }
+      ],
+      "status": "executed",
+      "ib_fill_price": null,
+      "ib_commission": null,
+      "ib_realized_pnl": null
+    }
+  ],
   "pending_signals": [],
-  "alerts": []
+  "alerts": [
+    {
+      "timestamp": "2026-04-08T12:34:49.527269+00:00",
+      "level": "order_placed",
+      "message": "Executed vix_mean_reversion: VIX mean reversion: sell 20.5C/23.0C, VIX=20.4 roll=0.392 RSI=73.2"
+    }
+  ]
 }

@@ -1,13 +1,13 @@
 {
-  "updated_at": "2026-04-08T14:20:28.981953+00:00",
+  "updated_at": "2026-04-08T14:25:29.039772+00:00",
   "account": {
-    "net_liquidation": 992988.7,
-    "total_cash": 976548.39,
-    "unrealized_pnl": -8810.99,
+    "net_liquidation": 993149.96,
+    "total_cash": 976539.64,
+    "unrealized_pnl": -8649.73,
     "realized_pnl": 0.0
   },
   "global_daily_pnl": 0.0,
-  "vix_level": 20.77,
+  "vix_level": 20.93,
   "approval_mode": false,
   "strategies": {
     "spx_0dte": {
@@ -19,9 +19,9 @@
       "max_position_size": 5
     },
     "vix_mean_reversion": {
-      "state": "scanning",
+      "state": "positioned",
       "daily_pnl": 0.0,
-      "open_positions": 0,
+      "open_positions": 1,
       "enabled": true,
       "max_daily_loss": 400.0,
       "max_position_size": 5
@@ -193,8 +193,8 @@
       "delta_at_entry": 0.1
     },
     "vix_mean_reversion": {
-      "vix_basis": 0.98,
-      "daily_roll": 0.196
+      "vix_basis": 0.62,
+      "daily_roll": 0.124
     },
     "gamma_scalping": {
       "rv": 0.01
@@ -339,6 +339,40 @@
       "ib_fill_price": 90.0,
       "ib_commission": 0.0,
       "ib_realized_pnl": 0.0
+    },
+    {
+      "timestamp": "2026-04-08T14:24:04.022975+00:00",
+      "strategy": "vix_mean_reversion",
+      "action": "SELL",
+      "reason": "VIX mean reversion: sell 21.0C/23.5C, VIX=21.1 roll=0.108 RSI=68.2",
+      "order_ids": [
+        47,
+        48
+      ],
+      "legs": [
+        {
+          "symbol": "VIX",
+          "action": "SELL",
+          "quantity": 1,
+          "order_type": "MKT",
+          "strike": 21.0,
+          "right": "C",
+          "expiry": "20260508"
+        },
+        {
+          "symbol": "VIX",
+          "action": "BUY",
+          "quantity": 1,
+          "order_type": "MKT",
+          "strike": 23.5,
+          "right": "C",
+          "expiry": "20260508"
+        }
+      ],
+      "status": "executed",
+      "ib_fill_price": null,
+      "ib_commission": null,
+      "ib_realized_pnl": null
     }
   ],
   "pending_signals": [],
@@ -402,6 +436,11 @@
       "timestamp": "2026-04-08T14:03:09.049874+00:00",
       "level": "fill",
       "message": "Fill: SPX qty=1.0 @ $90.00 [vrp_put_spread]"
+    },
+    {
+      "timestamp": "2026-04-08T14:24:04.022987+00:00",
+      "level": "order_placed",
+      "message": "Executed vix_mean_reversion: VIX mean reversion: sell 21.0C/23.5C, VIX=21.1 roll=0.108 RSI=68.2"
     }
   ]
 }

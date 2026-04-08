@@ -1,13 +1,13 @@
 {
-  "updated_at": "2026-04-08T14:55:29.360208+00:00",
+  "updated_at": "2026-04-08T15:00:29.420433+00:00",
   "account": {
-    "net_liquidation": 995144.16,
-    "total_cash": 976437.14,
-    "unrealized_pnl": -6655.53,
+    "net_liquidation": 995086.54,
+    "total_cash": 976442.14,
+    "unrealized_pnl": -6713.15,
     "realized_pnl": 0.0
   },
   "global_daily_pnl": 0.0,
-  "vix_level": 21.67,
+  "vix_level": 21.61,
   "approval_mode": false,
   "strategies": {
     "spx_0dte": {
@@ -19,9 +19,9 @@
       "max_position_size": 5
     },
     "vix_mean_reversion": {
-      "state": "scanning",
+      "state": "positioned",
       "daily_pnl": 0.0,
-      "open_positions": 0,
+      "open_positions": 1,
       "enabled": true,
       "max_daily_loss": 400.0,
       "max_position_size": 5
@@ -193,8 +193,8 @@
       "delta_at_entry": 0.1
     },
     "vix_mean_reversion": {
-      "vix_basis": 0.38,
-      "daily_roll": 0.076
+      "vix_basis": 0.49,
+      "daily_roll": 0.098
     },
     "gamma_scalping": {
       "rv": 0.01
@@ -203,7 +203,7 @@
       "vrp": 20.01
     },
     "mes_trend_following": {
-      "atr": 9.0
+      "atr": 8.93
     }
   },
   "trades": [
@@ -376,6 +376,40 @@
       "ib_fill_price": null,
       "ib_commission": null,
       "ib_realized_pnl": null
+    },
+    {
+      "timestamp": "2026-04-08T14:56:49.378612+00:00",
+      "strategy": "vix_mean_reversion",
+      "action": "SELL",
+      "reason": "VIX mean reversion: sell 21.5C/24.0C, VIX=21.6 roll=0.104 RSI=69.2",
+      "order_ids": [
+        49,
+        50
+      ],
+      "legs": [
+        {
+          "symbol": "VIX",
+          "action": "SELL",
+          "quantity": 1,
+          "order_type": "MKT",
+          "strike": 21.5,
+          "right": "C",
+          "expiry": "20260508"
+        },
+        {
+          "symbol": "VIX",
+          "action": "BUY",
+          "quantity": 1,
+          "order_type": "MKT",
+          "strike": 24.0,
+          "right": "C",
+          "expiry": "20260508"
+        }
+      ],
+      "status": "executed",
+      "ib_fill_price": null,
+      "ib_commission": null,
+      "ib_realized_pnl": null
     }
   ],
   "pending_signals": [],
@@ -444,6 +478,11 @@
       "timestamp": "2026-04-08T14:24:04.022987+00:00",
       "level": "order_placed",
       "message": "Executed vix_mean_reversion: VIX mean reversion: sell 21.0C/23.5C, VIX=21.1 roll=0.108 RSI=68.2"
+    },
+    {
+      "timestamp": "2026-04-08T14:56:49.378644+00:00",
+      "level": "order_placed",
+      "message": "Executed vix_mean_reversion: VIX mean reversion: sell 21.5C/24.0C, VIX=21.6 roll=0.104 RSI=69.2"
     }
   ]
 }

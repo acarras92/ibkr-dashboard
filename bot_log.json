@@ -1,13 +1,13 @@
 {
-  "updated_at": "2026-04-08T19:20:32.342510+00:00",
+  "updated_at": "2026-04-08T19:25:32.398171+00:00",
   "account": {
-    "net_liquidation": 994689.11,
+    "net_liquidation": 994423.41,
     "total_cash": 976481.52,
-    "unrealized_pnl": -8673.09,
+    "unrealized_pnl": -8938.78,
     "realized_pnl": 1562.51
   },
   "global_daily_pnl": 0.0,
-  "vix_level": 21.73,
+  "vix_level": 21.53,
   "approval_mode": false,
   "strategies": {
     "spx_0dte": {
@@ -19,9 +19,9 @@
       "max_position_size": 5
     },
     "vix_mean_reversion": {
-      "state": "positioned",
+      "state": "scanning",
       "daily_pnl": 0.0,
-      "open_positions": 1,
+      "open_positions": 0,
       "enabled": true,
       "max_daily_loss": 400.0,
       "max_position_size": 5
@@ -193,8 +193,8 @@
       "delta_at_entry": 0.1
     },
     "vix_mean_reversion": {
-      "vix_basis": 0.32,
-      "daily_roll": 0.064
+      "vix_basis": 0.37,
+      "daily_roll": 0.074
     },
     "gamma_scalping": {
       "rv": 0.01
@@ -203,9 +203,9 @@
       "vrp": 20.01
     },
     "mes_trend_following": {
-      "ema_fast": 6810.21,
-      "ema_slow": 6812.25,
-      "atr": 6.35,
+      "ema_fast": 6810.03,
+      "ema_slow": 6812.09,
+      "atr": 6.43,
       "position_direction": "SHORT",
       "stop_price": 6806.26
     }

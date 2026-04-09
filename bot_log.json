@@ -1,13 +1,13 @@
 {
-  "updated_at": "2026-04-09T13:46:11.672429+00:00",
+  "updated_at": "2026-04-09T13:51:12.894471+00:00",
   "account": {
-    "net_liquidation": 992887.51,
-    "total_cash": 0.0,
-    "unrealized_pnl": 0.0,
+    "net_liquidation": 992939.12,
+    "total_cash": 976481.52,
+    "unrealized_pnl": -10574.06,
     "realized_pnl": 0.0
   },
   "global_daily_pnl": 0.0,
-  "vix_level": null,
+  "vix_level": 21.21,
   "approval_mode": false,
   "strategies": {
     "spx_0dte": {
@@ -19,9 +19,9 @@
       "max_position_size": 5
     },
     "vix_mean_reversion": {
-      "state": "scanning",
+      "state": "positioned",
       "daily_pnl": 0.0,
-      "open_positions": 0,
+      "open_positions": 1,
       "enabled": true,
       "max_daily_loss": 400.0,
       "max_position_size": 5
@@ -170,12 +170,12 @@
   "macro_overlay": {
     "quad": 1,
     "growth_roc": null,
-    "inflation_proxy": null,
+    "inflation_proxy": 0.35,
     "growth_trend": "unknown",
-    "inflation_trend": "unknown",
+    "inflation_trend": "accelerating",
     "confidence": "low",
-    "updated_at": "2026-04-09T13:46:11.648527+00:00",
-    "data_source": "cold_start_default",
+    "updated_at": "2026-04-09T13:46:16.680067+00:00",
+    "data_source": "vx_slope",
     "enabled": true,
     "vrp_multiplier": 1.0,
     "favored_strategies": [
@@ -185,10 +185,59 @@
     ],
     "disabled_strategies": [],
     "short_vol_cap": 6,
-    "spx_data_points": 0
+    "spx_data_points": 1
   },
-  "quant_metrics": {},
-  "trades": [],
+  "quant_metrics": {
+    "vix_mean_reversion": {
+      "vix_basis": 0.54,
+      "daily_roll": 0.135
+    },
+    "gamma_scalping": {
+      "rv": 0.24
+    }
+  },
+  "trades": [
+    {
+      "timestamp": "2026-04-09T13:50:47.889515+00:00",
+      "strategy": "vix_mean_reversion",
+      "action": "SELL",
+      "reason": "VIX mean reversion: sell 21.0C/23.5C, VIX=21.2 roll=0.157 RSI=65.8",
+      "order_ids": [
+        21,
+        22
+      ],
+      "legs": [
+        {
+          "symbol": "VIX",
+          "action": "SELL",
+          "quantity": 1,
+          "order_type": "MKT",
+          "strike": 21.0,
+          "right": "C",
+          "expiry": "20260509"
+        },
+        {
+          "symbol": "VIX",
+          "action": "BUY",
+          "quantity": 1,
+          "order_type": "MKT",
+          "strike": 23.5,
+          "right": "C",
+          "expiry": "20260509"
+        }
+      ],
+      "status": "executed",
+      "ib_fill_price": null,
+      "ib_commission": null,
+      "ib_realized_pnl": null
+    }
+  ],
   "pending_signals": [],
-  "alerts": []
+  "alerts": [
+    {
+      "timestamp": "2026-04-09T13:50:47.889533+00:00",
+      "level": "order_placed",
+      "message": "Executed vix_mean_reversion: VIX mean reversion: sell 21.0C/23.5C, VIX=21.2 roll=0.157 RSI=65.8"
+    }
+  ]
 }

@@ -1,19 +1,19 @@
 {
-  "updated_at": "2026-04-14T14:00:14.172432+00:00",
+  "updated_at": "2026-04-14T14:05:17.575047+00:00",
   "account": {
-    "net_liquidation": 984722.55,
-    "total_cash": 977706.68,
-    "unrealized_pnl": -19244.06,
+    "net_liquidation": 984458.54,
+    "total_cash": 978841.84,
+    "unrealized_pnl": -19508.07,
     "realized_pnl": 0.0
   },
   "global_daily_pnl": 0.0,
-  "vix_level": 18.26,
+  "vix_level": 18.15,
   "approval_mode": false,
   "strategies": {
     "spx_0dte": {
-      "state": "scanning",
+      "state": "positioned",
       "daily_pnl": 0.0,
-      "open_positions": 0,
+      "open_positions": 1,
       "enabled": true,
       "max_daily_loss": 300.0,
       "max_position_size": 5
@@ -51,9 +51,9 @@
       "max_position_size": 5
     },
     "vrp_put_spread": {
-      "state": "scanning",
+      "state": "positioned",
       "daily_pnl": 0.0,
-      "open_positions": 0,
+      "open_positions": 2,
       "enabled": true,
       "max_daily_loss": 500.0,
       "max_position_size": 5
@@ -77,7 +77,7 @@
         "win_rate": null,
         "trade_count": 0,
         "daily_pnl": 0.0,
-        "open_positions": 0,
+        "open_positions": 1,
         "paused_daily_loss": false,
         "current_params": {
           "vrp_threshold": 3.0,
@@ -126,7 +126,7 @@
         "win_rate": null,
         "trade_count": 0,
         "daily_pnl": 0.0,
-        "open_positions": 0,
+        "open_positions": 2,
         "paused_daily_loss": false,
         "current_params": {
           "vrp_threshold": 3.0,
@@ -161,7 +161,7 @@
     }
   },
   "reconciliation": {
-    "total_fills_tracked": 0,
+    "total_fills_tracked": 6,
     "total_discrepancies": 0,
     "cumulative_drift": {},
     "paused_strategies": [],
@@ -188,12 +188,19 @@
     "spx_data_points": 1
   },
   "quant_metrics": {
+    "spx_0dte": {
+      "vrp": 18.13,
+      "delta_at_entry": 0.1
+    },
     "vix_mean_reversion": {
-      "vix_basis": 0.29,
-      "daily_roll": 0.29
+      "vix_basis": 0.4,
+      "daily_roll": 0.4
     },
     "gamma_scalping": {
       "rv": 0.03
+    },
+    "vrp_put_spread": {
+      "vrp": 18.12
     }
   },
   "trades": [
@@ -230,6 +237,108 @@
       "ib_fill_price": null,
       "ib_commission": null,
       "ib_realized_pnl": null
+    },
+    {
+      "timestamp": "2026-04-14T14:01:48.713318+00:00",
+      "strategy": "spx_0dte",
+      "action": "SELL",
+      "reason": "0DTE put credit spread: sell 6870P / buy 6865P, SPX @ 6922, delta=0.100, VRP=18.1%",
+      "order_ids": [
+        31,
+        32
+      ],
+      "legs": [
+        {
+          "symbol": "SPX",
+          "action": "SELL",
+          "quantity": 1,
+          "order_type": "MKT",
+          "strike": 6870,
+          "right": "P",
+          "expiry": "20260414"
+        },
+        {
+          "symbol": "SPX",
+          "action": "BUY",
+          "quantity": 1,
+          "order_type": "MKT",
+          "strike": 6865,
+          "right": "P",
+          "expiry": "20260414"
+        }
+      ],
+      "status": "filled",
+      "ib_fill_price": 1.85,
+      "ib_commission": 0.0,
+      "ib_realized_pnl": 0.0
+    },
+    {
+      "timestamp": "2026-04-14T14:01:58.246359+00:00",
+      "strategy": "vrp_put_spread",
+      "action": "SELL",
+      "reason": "VRP put spread: sell 6830P / buy 6805P exp 20260515 (31 DTE), SPX @ 6922, short_delta=0.100, VRP=18.1%",
+      "order_ids": [
+        33,
+        34
+      ],
+      "legs": [
+        {
+          "symbol": "SPX",
+          "action": "SELL",
+          "quantity": 1,
+          "order_type": "MKT",
+          "strike": 6830,
+          "right": "P",
+          "expiry": "20260515"
+        },
+        {
+          "symbol": "SPX",
+          "action": "BUY",
+          "quantity": 1,
+          "order_type": "MKT",
+          "strike": 6805,
+          "right": "P",
+          "expiry": "20260515"
+        }
+      ],
+      "status": "filled",
+      "ib_fill_price": 75.4,
+      "ib_commission": 0.0,
+      "ib_realized_pnl": 0.0
+    },
+    {
+      "timestamp": "2026-04-14T14:02:12.543082+00:00",
+      "strategy": "vrp_put_spread",
+      "action": "SELL",
+      "reason": "VRP put spread: sell 6830P / buy 6805P exp 20260515 (31 DTE), SPX @ 6922, short_delta=0.100, VRP=18.1%",
+      "order_ids": [
+        35,
+        36
+      ],
+      "legs": [
+        {
+          "symbol": "SPX",
+          "action": "SELL",
+          "quantity": 1,
+          "order_type": "MKT",
+          "strike": 6830,
+          "right": "P",
+          "expiry": "20260515"
+        },
+        {
+          "symbol": "SPX",
+          "action": "BUY",
+          "quantity": 1,
+          "order_type": "MKT",
+          "strike": 6805,
+          "right": "P",
+          "expiry": "20260515"
+        }
+      ],
+      "status": "filled",
+      "ib_fill_price": 75.3,
+      "ib_commission": 0.0,
+      "ib_realized_pnl": 0.0
     }
   ],
   "pending_signals": [],
@@ -238,6 +347,81 @@
       "timestamp": "2026-04-14T13:48:04.062794+00:00",
       "level": "order_placed",
       "message": "Executed vix_mean_reversion: VIX mean reversion: sell 18.5C/21.0C, VIX=18.3 roll=0.250 RSI=66.7"
+    },
+    {
+      "timestamp": "2026-04-14T14:01:48.713332+00:00",
+      "level": "order_placed",
+      "message": "Executed spx_0dte: 0DTE put credit spread: sell 6870P / buy 6865P, SPX @ 6922, delta=0.100, VRP=18.1%"
+    },
+    {
+      "timestamp": "2026-04-14T14:01:50.180111+00:00",
+      "level": "fill",
+      "message": "Fill: SPX qty=1.0 @ $2.00 [spx_0dte]"
+    },
+    {
+      "timestamp": "2026-04-14T14:01:50.191589+00:00",
+      "level": "fill",
+      "message": "Fill: SPX qty=1.0 @ $1.85 [spx_0dte]"
+    },
+    {
+      "timestamp": "2026-04-14T14:01:50.194601+00:00",
+      "level": "fill",
+      "message": "Fill: SPX qty=1.0 @ $2.00 [spx_0dte]"
+    },
+    {
+      "timestamp": "2026-04-14T14:01:50.198179+00:00",
+      "level": "fill",
+      "message": "Fill: SPX qty=1.0 @ $1.85 [spx_0dte]"
+    },
+    {
+      "timestamp": "2026-04-14T14:01:58.246375+00:00",
+      "level": "order_placed",
+      "message": "Executed vrp_put_spread: VRP put spread: sell 6830P / buy 6805P exp 20260515 (31 DTE), SPX @ 6922, short_delta=0.100, VRP=18.1%"
+    },
+    {
+      "timestamp": "2026-04-14T14:01:59.406209+00:00",
+      "level": "fill",
+      "message": "Fill: SPX qty=1.0 @ $81.00 [vrp_put_spread]"
+    },
+    {
+      "timestamp": "2026-04-14T14:01:59.411618+00:00",
+      "level": "fill",
+      "message": "Fill: SPX qty=1.0 @ $81.00 [vrp_put_spread]"
+    },
+    {
+      "timestamp": "2026-04-14T14:01:59.474098+00:00",
+      "level": "fill",
+      "message": "Fill: SPX qty=1.0 @ $75.40 [vrp_put_spread]"
+    },
+    {
+      "timestamp": "2026-04-14T14:01:59.476442+00:00",
+      "level": "fill",
+      "message": "Fill: SPX qty=1.0 @ $75.40 [vrp_put_spread]"
+    },
+    {
+      "timestamp": "2026-04-14T14:02:12.543100+00:00",
+      "level": "order_placed",
+      "message": "Executed vrp_put_spread: VRP put spread: sell 6830P / buy 6805P exp 20260515 (31 DTE), SPX @ 6922, short_delta=0.100, VRP=18.1%"
+    },
+    {
+      "timestamp": "2026-04-14T14:02:12.798560+00:00",
+      "level": "fill",
+      "message": "Fill: SPX qty=1.0 @ $81.00 [vrp_put_spread]"
+    },
+    {
+      "timestamp": "2026-04-14T14:02:12.802805+00:00",
+      "level": "fill",
+      "message": "Fill: SPX qty=1.0 @ $75.30 [vrp_put_spread]"
+    },
+    {
+      "timestamp": "2026-04-14T14:02:12.805711+00:00",
+      "level": "fill",
+      "message": "Fill: SPX qty=1.0 @ $81.00 [vrp_put_spread]"
+    },
+    {
+      "timestamp": "2026-04-14T14:02:12.808475+00:00",
+      "level": "fill",
+      "message": "Fill: SPX qty=1.0 @ $75.30 [vrp_put_spread]"
     }
   ]
 }

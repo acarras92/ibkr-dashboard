@@ -1,13 +1,13 @@
 {
-  "updated_at": "2026-04-14T13:25:11.352656+00:00",
+  "updated_at": "2026-04-14T13:30:12.497547+00:00",
   "account": {
-    "net_liquidation": 985096.76,
+    "net_liquidation": 984959.41,
     "total_cash": 977706.68,
-    "unrealized_pnl": -18869.85,
+    "unrealized_pnl": -19007.2,
     "realized_pnl": 0.0
   },
   "global_daily_pnl": 0.0,
-  "vix_level": 18.35,
+  "vix_level": 18.31,
   "approval_mode": false,
   "strategies": {
     "spx_0dte": {
@@ -189,8 +189,8 @@
   },
   "quant_metrics": {
     "vix_mean_reversion": {
-      "vix_basis": 0.2,
-      "daily_roll": 0.2
+      "vix_basis": 0.19,
+      "daily_roll": 0.19
     }
   },
   "trades": [],

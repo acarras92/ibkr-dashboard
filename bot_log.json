@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-15T00:10:32.777340+00:00",
+  "updated_at": "2026-04-15T00:15:32.830554+00:00",
   "account": {
     "net_liquidation": 983961.9,
     "total_cash": 978841.84,
@@ -19,9 +19,9 @@
       "max_position_size": 5
     },
     "vix_mean_reversion": {
-      "state": "positioned",
+      "state": "scanning",
       "daily_pnl": 0.0,
-      "open_positions": 1,
+      "open_positions": 0,
       "enabled": true,
       "max_daily_loss": 400.0,
       "max_position_size": 5
@@ -193,8 +193,8 @@
       "delta_at_entry": 0.1
     },
     "vix_mean_reversion": {
-      "vix_basis": 0.09,
-      "daily_roll": 0.09
+      "vix_basis": 0.04,
+      "daily_roll": 0.04
     },
     "gamma_scalping": {
       "rv": 0.03

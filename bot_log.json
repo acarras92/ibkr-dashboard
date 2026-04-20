@@ -1,9 +1,9 @@
 {
-  "updated_at": "2026-04-20T19:29:21.697676+00:00",
+  "updated_at": "2026-04-20T19:34:21.738718+00:00",
   "account": {
-    "net_liquidation": 980800.6,
+    "net_liquidation": 980689.51,
     "total_cash": 996680.28,
-    "unrealized_pnl": -23514.21,
+    "unrealized_pnl": -23625.3,
     "realized_pnl": 0.0
   },
   "global_daily_pnl": 0.0,
@@ -203,9 +203,9 @@
       "vrp": 18.8
     },
     "mes_trend_following": {
-      "ema_fast": 7142.46,
-      "ema_slow": 7141.71,
-      "atr": 3.56
+      "ema_fast": 7142.56,
+      "ema_slow": 7141.78,
+      "atr": 3.45
     }
   },
   "trades": [

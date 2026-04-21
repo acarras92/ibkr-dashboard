@@ -1,9 +1,9 @@
 {
-  "updated_at": "2026-04-20T23:58:38.132768+00:00",
+  "updated_at": "2026-04-21T00:03:38.243106+00:00",
   "account": {
-    "net_liquidation": 981313.37,
+    "net_liquidation": 981313.57,
     "total_cash": 996680.28,
-    "unrealized_pnl": -23001.44,
+    "unrealized_pnl": -23001.24,
     "realized_pnl": 0.0
   },
   "global_daily_pnl": 0.0,
@@ -68,7 +68,7 @@
     }
   },
   "guardrails": {
-    "portfolio_paused": true,
+    "portfolio_paused": false,
     "account_high_water": 1000000.0,
     "macro_short_vol_cap": 6,
     "macro_disabled_strategies": [],
@@ -161,7 +161,7 @@
     }
   },
   "reconciliation": {
-    "total_fills_tracked": 4,
+    "total_fills_tracked": 0,
     "total_discrepancies": 0,
     "cumulative_drift": {},
     "paused_strategies": [],
@@ -193,8 +193,8 @@
       "delta_at_entry": 0.1
     },
     "vix_mean_reversion": {
-      "vix_basis": 1.31,
-      "daily_roll": 0.0595
+      "vix_basis": 1.63,
+      "daily_roll": 0.0741
     },
     "gamma_scalping": {
       "rv": 0.02
